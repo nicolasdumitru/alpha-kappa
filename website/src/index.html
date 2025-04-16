@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conductivity Graph</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Title for the graph -->
+        <h1 id="graphTitle" style="text-align: center;">Conductivitate în funcție de concentrație</h1>
+
+        <!-- Dropdown to select the substance -->
+        <div id="dropdownContainer">
+            <label for="substanceSelector">Substanță:</label>
+            <select id="substanceSelector">
+                <option value="aceticAcid">CH₃COOH (Acid Acetic)</option>
+                <option value="kcl">KCl (Clorură de potasiu)</option>
+            </select>
+        </div>
+
+        <!-- Form to input conductivity values -->
+        <form id="conductivityForm">
+            <div id="concentrationInputs">
+                <div>
+                    <label for="conductivity-0.001">0.001 N:</label>
+                    <input type="number" id="conductivity-0.001" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-0.01">0.01 N:</label>
+                    <input type="number" id="conductivity-0.01" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-0.1">0.1 N:</label>
+                    <input type="number" id="conductivity-0.1" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-1">1 N:</label>
+                    <input type="number" id="conductivity-1" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+            </div>
+            <div id="temperatureInputs" style="display: none;">
+                <div>
+                    <label for="conductivity-20">20 °C:</label>
+                    <input type="number" id="conductivity-20" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-25">25 °C:</label>
+                    <input type="number" id="conductivity-25" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-30">30 °C:</label>
+                    <input type="number" id="conductivity-30" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+                <div>
+                    <label for="conductivity-35">35 °C:</label>
+                    <input type="number" id="conductivity-35" step="0.01" placeholder="Conductivitatea măsurată (S/cm)">
+                </div>
+            </div>
+            <button type="button" id="updateChartButton">Creează grafic</button>
+            <button type="button" id="toggleGraphButton">Toggle Graph</button>
+        </form>
+
+        <!-- Canvas for the chart -->
+        <canvas id="substanceChart" width="400" height="200"></canvas>
+    </div>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
