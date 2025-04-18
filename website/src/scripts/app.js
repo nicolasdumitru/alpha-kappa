@@ -1,260 +1,208 @@
-// Data for CH3COOH (acetic acid)
-const aceticAcidData = {
-    concentrations: [0.001, 0.01, 0.1, 1], // Example concentrations in mol/L
-    conductivities: [0.16, 0.28, 0.55, 1.0], // Default conductivities in mS/cm
-    temperatures: [20, 25, 30, 35], // Example temperatures in °C
-    temperatureConductivities: [0, 0, 0, 0] // Placeholder for custom temperature conductivities
-};
-
-// Data for KCl (potassium chloride)
-const kclData = {
-    concentrations: [0.001, 0.01, 0.1, 1], // Example concentrations in mol/L
-    conductivities: [1.3, 2.6, 6.5, 13.0], // Default conductivities in mS/cm
-    temperatures: [20, 25, 30, 35], // Example temperatures in °C
-    temperatureConductivities: [0, 0, 0, 0] // Placeholder for custom temperature conductivities
-};
-
-// Default concentrations for the form
-const liveConcentrations = [0.001, 0.01, 0.1, 1];
-const liveTemperatures = [20, 25, 30, 35];
-
-// Store custom conductivities and graph states for each substance
-const customConductivityData = {
-    aceticAcid: {
-        concentrations: null, // Custom concentration conductivities
-        temperatures: null, // Custom temperature conductivities
-        graphGenerated: false // Tracks if a graph was generated
-    },
-    kcl: {
-        concentrations: null, // Custom concentration conductivities
-        temperatures: null, // Custom temperature conductivities
-        graphGenerated: false // Tracks if a graph was generated
-    }
-};
-
-// Chart instance (initialized as null)
-let substanceChart = null;
-let currentGraphType = 'concentration'; // Default graph type
-
-// Function to create or update the chart
-const updateChart = (substance) => {
-    // Get the chart data based on the selected substance
-    const chartData = substance === 'aceticAcid' ? aceticAcidData : kclData;
-    const chartLabel =
-        currentGraphType === 'concentration'
-            ? (substance === 'aceticAcid' ? 'CH₃COOH \u03BB=f(C)' : 'KCl \u03BB=f(C)')
-            : (substance === 'aceticAcid' ? 'CH₃COOH \u03BB=f(T)' : 'KCl \u03BB=f(T)');
-    const chartColor = substance === 'aceticAcid' ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)';
-    const chartBgColor = substance === 'aceticAcid' ? 'rgba(255, 99, 132, 0.2)' : 'rgba(54, 162, 235, 0.2)';
-
-    // Determine the X-axis labels and Y-axis data based on the graph type
-    const xLabels = currentGraphType === 'concentration' ? chartData.concentrations : chartData.temperatures;
-    const yData =
-        currentGraphType === 'concentration'
-            ? customConductivityData[substance].concentrations
-            : customConductivityData[substance].temperatures;
-
-    // If no conductivities are available, destroy the chart and return
-    if (!yData || yData.every((value) => value === 0)) {
-        if (substanceChart) {
-            substanceChart.destroy();
-            substanceChart = null;
+class Electrolyte {
+    constructor(name, cation, anion, strength) {
+        this.name = name;
+        this.cation = cation;
+        this.anion = anion;
+        this.theoreticalInfiniteDilutionConductivity = cation + anion;
+        if (strength == 'strong') {
+            this.alpha = 1;
+        } else {
+            this.alpha = [0, 0, 0, 0, 0, 0, 0];
         }
-        return;
-    }
-
-    // If a chart already exists, destroy it before creating a new one
-    if (substanceChart) {
-        substanceChart.destroy();
-    }
-
-    // Create a new chart
-    substanceChart = new Chart(document.getElementById('substanceChart'), {
-        type: 'line',
-        data: {
-            labels: xLabels, // X-axis: concentrations or temperatures
-            datasets: [{
-                label: chartLabel,
-                data: yData, // Y-axis: conductivities
-                borderColor: chartColor,
-                backgroundColor: chartBgColor,
-                borderWidth: 2,
-                fill: false,
-                tension: 0.1 // Smoothness of the line
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: currentGraphType === 'concentration' ? 'Concentrație (N)' : 'Temperatură (°C)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Conductivitate (S/cm)'
-                    }
-                }
-            }
+        if (name != 'NaOH') {
+            this.length = 7;
+        } else {
+            this.length = 6; // we won't calculate for C=1 for NaOH
         }
-    });
-};
+        this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
+        this.temperatures = [25, 30, 35, 40, 45, 50, 55];
+        if (name != 'KCl') {
+            this.phos = [0, 0, 0, 0, 0, 0, 0];
+            this.ph = [0, 0, 0, 0, 0, 0, 0];
+        }
+        this.conductivities = [0, 0, 0, 0, 0, 0, 0];
+        this.equivalentConductivities = [0, 0, 0, 0, 0, 0, 0];
+        this.kd = [0, 0, 0, 0, 0, 0, 0];
+        this.isGraph1 = false;
+        this.isGraph2 = false;
 
-// Function to toggle input fields based on the graph type
-const toggleInputFields = () => {
-    const concentrationInputs = document.getElementById('concentrationInputs');
-    const temperatureInputs = document.getElementById('temperatureInputs');
-
-    if (currentGraphType === 'concentration') {
-        concentrationInputs.style.display = 'block';
-        temperatureInputs.style.display = 'none';
-    } else {
-        concentrationInputs.style.display = 'none';
-        temperatureInputs.style.display = 'block';
+        // New fields to store entered conductivities
+        this.storedConductivitiesForConcentrations = Array(this.length).fill(null);
+        this.storedConductivitiesForTemperatures = Array(this.length).fill(null);
     }
+}
+
+// Create electrolyte objects
+const hcl = new Electrolyte('HCl', 349.6, 76.4, 'strong');
+const naoh = new Electrolyte('NaOH', 50.1, 197.8, 'strong');
+const kcl = new Electrolyte('KCl', 73.5, 76.4, 'strong');
+const aceticAcid = new Electrolyte('CH₃COOH', 349.6, 40.9, 'weak');
+
+// Store the electrolytes in an object for easy access
+const electrolytes = {
+    'HCl': hcl,
+    'NaOH': naoh,
+    'KCl': kcl,
+    'CH₃COOH': aceticAcid
 };
 
-// Function to clear input fields
-const clearInputFields = () => {
-    const inputs = document.querySelectorAll('#concentrationInputs input, #temperatureInputs input');
-    inputs.forEach((input) => {
-        input.value = ''; // Clear the value of each input field
-    });
-};
+let currentMode = 'concentrations'; // Default mode is concentrations
 
 // Event listener for the dropdown
-document.getElementById('substanceSelector').addEventListener('change', (event) => {
-    const selectedSubstance = event.target.value;
+document.getElementById('solutionSelector').addEventListener('change', (event) => {
+    const selectedSolution = event.target.value; // Get the selected solution
+    const selectedElectrolyte = electrolytes[selectedSolution]; // Get the corresponding Electrolyte object
 
-    // Save the current input values for the previously selected substance
-    const customConductivities =
-        currentGraphType === 'concentration'
-            ? liveConcentrations.map((concentration) => {
-                  const input = document.getElementById(`conductivity-${concentration}`);
-                  return parseFloat(input.value) || 0; // Default to 0 if no value is entered
-              })
-            : liveTemperatures.map((temperature) => {
-                  const input = document.getElementById(`conductivity-${temperature}`);
-                  return parseFloat(input.value) || 0; // Default to 0 if no value is entered
-              });
+    // Show the toggle and generate graph button when a solution is selected
+    const toggleButton = document.getElementById('toggleModeButton');
+    toggleButton.hidden = false;
 
-    const previousSubstance = document.getElementById('substanceSelector').dataset.previousSubstance;
-    if (previousSubstance) {
-        if (currentGraphType === 'concentration') {
-            customConductivityData[previousSubstance].concentrations = customConductivities;
-        } else {
-            customConductivityData[previousSubstance].temperatures = customConductivities;
-        }
-    }
+    const generateGraphButton = document.getElementById('generateGraphButton');
+    generateGraphButton.hidden = false;
 
-    // Clear the input fields
-    clearInputFields();
-
-    // Load the stored values for the newly selected substance
-    const storedConductivities =
-        currentGraphType === 'concentration'
-            ? customConductivityData[selectedSubstance].concentrations
-            : customConductivityData[selectedSubstance].temperatures;
-
-    if (storedConductivities) {
-        const inputs = currentGraphType === 'concentration' ? liveConcentrations : liveTemperatures;
-        inputs.forEach((value, index) => {
-            const input = document.getElementById(`conductivity-${value}`);
-            input.value = storedConductivities[index] || ''; // Populate the input field with the stored value
-        });
-    }
-
-    // Destroy the chart if switching substances
-    if (substanceChart) {
-        substanceChart.destroy();
-        substanceChart = null;
-    }
-
-    // Save the newly selected substance as the previous substance
-    document.getElementById('substanceSelector').dataset.previousSubstance = selectedSubstance;
-
-    // If a graph was previously generated for the new substance, recreate it
-    if (customConductivityData[selectedSubstance].graphGenerated) {
-        updateChart(selectedSubstance);
-    }
-});
-
-// Event listener for the form button
-document.getElementById('updateChartButton').addEventListener('click', () => {
-    const selectedSubstance = document.getElementById('substanceSelector').value;
-
-    // Collect custom conductivity values from the form
-    const customConductivities =
-        currentGraphType === 'concentration'
-            ? liveConcentrations.map((concentration) => {
-                  const input = document.getElementById(`conductivity-${concentration}`);
-                  return input.value === '' ? null : parseFloat(input.value); // Return null if the field is empty
-              })
-            : liveTemperatures.map((temperature) => {
-                  const input = document.getElementById(`conductivity-${temperature}`);
-                  return input.value === '' ? null : parseFloat(input.value); // Return null if the field is empty
-              });
-
-    // Check if all cells are completed
-    if (customConductivities.includes(null)) {
-        // Display an error message if any cell is empty
-        alert('Toate câmpurile trebuie completate pentru a crea graficul!'); // "All fields must be completed to create the graph!"
-        return; // Stop further execution
-    }
-
-    // Save the custom conductivities for the selected substance and graph type
-    if (currentGraphType === 'concentration') {
-        customConductivityData[selectedSubstance].concentrations = customConductivities;
-    } else {
-        customConductivityData[selectedSubstance].temperatures = customConductivities;
-    }
-
-    // Mark the graph as generated
-    customConductivityData[selectedSubstance].graphGenerated = true;
-
-    // Update the chart with the custom conductivities
-    updateChart(selectedSubstance);
+    updateInputFields(selectedElectrolyte);
 });
 
 // Event listener for the toggle button
-document.getElementById('toggleGraphButton').addEventListener('click', () => {
-    // Destroy the existing chart if it exists
-    if (substanceChart) {
-        substanceChart.destroy();
-        substanceChart = null;
+document.getElementById('toggleModeButton').addEventListener('click', () => {
+    // Toggle the mode
+    if (currentMode === 'concentrations') {
+        currentMode = 'temperatures';
+    } else {
+        currentMode = 'concentrations';
     }
 
-    // Toggle the graph type
-    currentGraphType = currentGraphType === 'concentration' ? 'temperature' : 'concentration';
+    // Update the button text
+    const toggleButton = document.getElementById('toggleModeButton');
+    if (currentMode === 'concentrations') {
+        toggleButton.textContent = 'Schimbă la temperaturi';
+    } else {
+        toggleButton.textContent = 'Schimbă la concentrații';
+    }
 
-    // Update the input fields visibility
-    toggleInputFields();
-
-    // Update the graph title
-    const graphTitle = document.getElementById('graphTitle');
-    graphTitle.textContent =
-        currentGraphType === 'concentration'
-            ? 'Conductivitate în funcție de concentrație'
-            : 'Conductivitate în funcție de temperatură';
-
-    // Update the toggle button description
-    const toggleButton = document.getElementById('toggleGraphButton');
-    toggleButton.textContent =
-        currentGraphType === 'concentration'
-            ? 'Schimbă la Conductivitate în funcție de temperatura'
-            : 'Schimbă la Conductivitate în funcție de concentrație';
-
-    // Recreate the chart if it was previously generated
-    const selectedSubstance = document.getElementById('substanceSelector').value;
-    if (customConductivityData[selectedSubstance].graphGenerated) {
-        updateChart(selectedSubstance);
+    // Get the currently selected solution
+    const selectedSolution = document.getElementById('solutionSelector').value;
+    if (selectedSolution) {
+        const selectedElectrolyte = electrolytes[selectedSolution];
+        updateInputFields(selectedElectrolyte);
     }
 });
 
-// Ensure the correct input fields and button description are visible on page load
-toggleInputFields();
-const toggleButton = document.getElementById('toggleGraphButton');
-toggleButton.textContent = 'Schimbă la concentrație în funcție de temperatură';
-document.getElementById('substanceSelector').dataset.previousSubstance = document.getElementById('substanceSelector').value;
+// Function to update the input fields based on the selected electrolyte and mode
+function updateInputFields(electrolyte) {
+    const inputContainer = document.getElementById('inputContainer');
+    inputContainer.innerHTML = ''; // Clear any existing text boxes
+
+    // Get the data to display based on the current mode
+    let data;
+    let storedValues;
+    let labelPrefix;
+    let unit;
+
+    if (currentMode === 'concentrations') {
+        data = electrolyte.concentrations;
+        storedValues = electrolyte.storedConductivitiesForConcentrations;
+        labelPrefix = 'Concentrație';
+        unit = 'N';
+    } else {
+        data = electrolyte.temperatures;
+        storedValues = electrolyte.storedConductivitiesForTemperatures;
+        labelPrefix = 'Temperatură';
+        unit = '°C';
+    }
+
+    // Dynamically create rows with labels and input fields
+    for (let i = 0; i < electrolyte.length; i++) {
+        // Create a container for each row
+        const row = document.createElement('div');
+        row.className = 'input-row'; // Add a class for styling
+
+        // Create a label for the value
+        const label = document.createElement('label');
+        label.textContent = `${labelPrefix}: ${data[i]} ${unit}`;
+        label.className = 'concentration-label'; // Add a class for styling
+
+        // Create an input field for the conductivity
+        const inputField = document.createElement('input');
+        inputField.type = 'number';
+        inputField.step = 'any'; // Allow float values
+        inputField.placeholder = 'Introduceți conductivitatea măsurată';
+        inputField.id = `input-${i}`;
+        inputField.className = 'dynamic-input'; // Add a class for styling
+
+        // Restore the stored value if it exists
+        if (storedValues[i] !== null) {
+            inputField.value = storedValues[i];
+        }
+
+        // Add an event listener to dynamically update the stored values
+        inputField.addEventListener('input', (event) => {
+            const value = event.target.value.trim();
+            if (value === '') {
+                storedValues[i] = null; // Remove the value if the input is empty
+            } else {
+                const floatValue = parseFloat(value);
+                if (!isNaN(floatValue)) {
+                    storedValues[i] = floatValue; // Store the entered float value
+                } else {
+                    storedValues[i] = null; // Reset if the value is invalid
+                }
+            }
+        });
+
+        // Append the label and input field to the row
+        row.appendChild(label);
+        row.appendChild(inputField);
+
+        // Append the row to the input container
+        inputContainer.appendChild(row);
+    }
+}
+
+// Event listener for the "Creează grafic" button
+document.getElementById('generateGraphButton').addEventListener('click', () => {
+    const selectedSolution = document.getElementById('solutionSelector').value;
+    if (!selectedSolution) {
+        alert('Vă rugăm să selectați o soluție înainte de a crea graficul!');
+        return;
+    }
+
+    const selectedElectrolyte = electrolytes[selectedSolution];
+    const dataToSend = {
+        name: selectedElectrolyte.name,
+        mode: currentMode,
+        concentrations: selectedElectrolyte.concentrations,
+        temperatures: selectedElectrolyte.temperatures,
+        storedConductivities:
+            currentMode === 'concentrations'
+                ? selectedElectrolyte.storedConductivitiesForConcentrations
+                : selectedElectrolyte.storedConductivitiesForTemperatures,
+    };
+
+    // Convert the data to JSON
+    const jsonData = JSON.stringify(dataToSend);
+
+    // Send the JSON to the Python backend
+    fetch('http://127.0.0.1:5000/receive-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: jsonData,
+    })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to send data to the server.');
+            }
+        })
+        .then((responseData) => {
+            console.log('Response from server:', responseData);
+            //alert('Datele au fost trimise cu succes!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            //alert('A apărut o eroare la trimiterea datelor.');
+        });
+});

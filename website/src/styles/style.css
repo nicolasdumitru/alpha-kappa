@@ -1,70 +1,33 @@
-body {
-    font-family: Arial, sans-serif;
+/* Style for the input container */
+#inputContainer {
+    margin-top: 20px;
+}
+
+/* Style for each row */
+.input-row {
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-}
-/* Center the form elements */
-#conductivityForm div, #dropdownContainer {
-    display: flex;
-    align-items: center; /* Vertically align the label and input/dropdown */
-    justify-content: flex-start; /* Align the input fields and dropdown closer to the left */
     margin-bottom: 10px; /* Add spacing between rows */
 }
 
-/* Style the labels */
-#conductivityForm label, #dropdownContainer label {
-    width: 120px; /* Set a consistent width for labels */
-    text-align: right; /* Align label text to the right */
-    margin-right: 10px; /* Add spacing between label and input/dropdown */
+/* Style for the labels */
+.concentration-label {
+    width: 200px; /* Set a fixed width for labels */
+    text-align: left; /* Align text to the left */
+    margin-right: 10px; /* Add spacing between label and input */
+    font-size: 14px; /* Adjust font size for readability */
 }
 
-/* Style the input fields and dropdown */
-#conductivityForm input[type="number"], #dropdownContainer select {
-    width: 250px; /* Set a consistent width for input fields and dropdown */
+/* Style for the input fields */
+.dynamic-input {
+    width: 300px; /* Set a consistent width for input fields */
     padding: 5px; /* Add padding for better appearance */
     font-size: 14px; /* Adjust font size for readability */
 }
 
-input[type="number"], select {
-    width: 250px; /* Set a consistent width for input fields and dropdown */
-    padding: 5px; /* Add padding for better appearance */
-    font-size: 14px; /* Adjust font size for readability */
-}
-
-/* Center the form elements */
-#conductivityForm div, #conductivityForm .dropdown-container {
-    display: flex;
-    align-items: center; /* Vertically align the label and input/dropdown */
-    justify-content: flex-start; /* Align the input fields and dropdown closer to the left */
-    margin-bottom: 10px; /* Add spacing between rows */
-}
-
-/* Style the labels */
-#conductivityForm label {
-    width: 120px; /* Set a consistent width for labels */
-    text-align: right; /* Align label text to the right */
-    margin-right: 10px; /* Add spacing between label and input/dropdown */
-}
-
-/* Style the input fields */
-#conductivityForm input[type="number"] {
-    width: 250px; /* Set a consistent width for input fields */
-    padding: 5px; /* Add padding for better appearance */
-    font-size: 14px; /* Adjust font size for readability */
-}
-
-/* Style the dropdown */
-#conductivityForm select {
-    width: 250px; /* Set a consistent width for the dropdown */
-    padding: 5px; /* Add padding for better appearance */
-    font-size: 14px; /* Adjust font size for readability */
-}
-
-/* Style the buttons */
-button {
+/* Style for the toggle button */
+#toggleModeButton {
+    margin-top: 20px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -75,11 +38,41 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
+#toggleModeButton:hover {
     background-color: #0056b3;
 }
 
-.counter {
-    margin-top: 20px;
-    font-size: 24px;
+/* Style for the result container */
+/* Style for the data table */
+.data-table {
+    width: 100%; /* Make the table take the full width of the container */
+    border-collapse: collapse; /* Remove gaps between table cells */
+    margin-top: 20px; /* Add spacing above the table */
+    font-size: 14px; /* Adjust font size for readability */
+    text-align: center; /* Center-align text in the table */
+}
+
+/* Style for table headers */
+.data-table th {
+    background-color: #f2f2f2; /* Light gray background for headers */
+    padding: 10px; /* Add padding for spacing */
+    border: 1px solid #ddd; /* Add borders to the headers */
+    font-weight: bold; /* Make header text bold */
+}
+
+/* Style for table cells */
+.data-table td {
+    padding: 10px; /* Add padding for spacing */
+    border: 1px solid #ddd; /* Add borders to the cells */
+    word-wrap: break-word; /* Allow text to wrap if it's too long */
+}
+
+/* Add hover effect for table rows */
+.data-table tr:hover {
+    background-color: #f9f9f9; /* Light gray background on hover */
+}
+
+/* Add spacing between rows */
+.data-table tr {
+    height: 40px; /* Increase row height for more spacing */
 }
