@@ -1,10 +1,11 @@
 class Electrolyte {
     constructor(name, cation, anion, strength) {
+        this.strength = strength;
         this.name = name;
         this.cation = cation;
         this.anion = anion;
         this.theoreticalInfiniteDilutionConductivity = cation + anion;
-        if (strength == 'strong') {
+        if (this.strength == 'strong') {
             this.alpha = 1;
         } else {
             this.alpha = [0, 0, 0, 0, 0, 0, 0];
@@ -17,10 +18,10 @@ class Electrolyte {
         this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
         this.temperatures = [25, 30, 35, 40, 45, 50, 55];
         if (name != 'KCl') {
-            this.phos = [0, 0, 0, 0, 0, 0, 0];
+            this.pho = [0, 0, 0, 0, 0, 0, 0];
             this.ph = [0, 0, 0, 0, 0, 0, 0];
         }
-        this.conductivities = [0, 0, 0, 0, 0, 0, 0];
+    
         this.equivalentConductivities = [0, 0, 0, 0, 0, 0, 0];
         this.kd = [0, 0, 0, 0, 0, 0, 0];
         this.isGraph1 = false;
@@ -169,14 +170,22 @@ document.getElementById('generateGraphButton').addEventListener('click', () => {
 
     const selectedElectrolyte = electrolytes[selectedSolution];
     const dataToSend = {
-        name: selectedElectrolyte.name,
         mode: currentMode,
+        strength: selectedElectrolyte.strength,
+        name: selectedElectrolyte.name,
+        cation: selectedElectrolyte.cation,
+        anion: selectedElectrolyte.anion,
+        theoreticalInfiniteDilutionConductivity: selectedElectrolyte.theoreticalInfiniteDilutionConductivity,
+        alpha: selectedElectrolyte.alpha,
+        length: selectedElectrolyte.length,
         concentrations: selectedElectrolyte.concentrations,
         temperatures: selectedElectrolyte.temperatures,
-        storedConductivities:
-            currentMode === 'concentrations'
-                ? selectedElectrolyte.storedConductivitiesForConcentrations
-                : selectedElectrolyte.storedConductivitiesForTemperatures,
+        equivalentConductivities: selectedElectrolyte.equivalentConductivities,
+        kd: selectedElectrolyte.kd,
+        ph: selectedElectrolyte.ph,
+        pho: selectedElectrolyte.pho,
+        storedConductivitiesForConcentrations: selectedElectrolyte.storedConductivitiesForConcentrations,
+        storedConductivitiesForTemperatures: selectedElectrolyte.storedConductivitiesForTemperatures,
     };
 
     // Convert the data to JSON

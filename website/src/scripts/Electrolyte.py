@@ -1,28 +1,59 @@
+import math
+
 class Electrolyte:
-    def __init__(self, name, cation, anion):
-        self.name = name
-        self.cation = cation
-        self.anion = anion
-        self.theoretical_infinite_dilution_conductivity = cation + anion
-
-        self.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1]
-        self.temperatures = [25, 30, 35, 40, 45, 50, 55]
-
-        if name != 'KCl':
-            self.phos = [0, 0, 0, 0, 0, 0, 0]
-            self.ph = [0, 0, 0, 0, 0, 0, 0]
-
-        self.conductivities = [0, 0, 0, 0, 0, 0, 0]
-        self.equivalent_conductivities = [0, 0, 0, 0, 0, 0, 0]
-        self.kd = [0, 0, 0, 0, 0, 0, 0]
-        self.is_graph1 = False
-        self.is_graph2 = False
-
-        # New fields to store entered conductivities
-        self.stored_conductivities_for_concentrations = [None] * self.length
-        self.stored_conductivities_for_temperatures = [None] * self.length
-
+    def __init__(self, data):
+        # Parse data from the dictionary
+        self.mode= data.get('mode')
+        self.strength = data.get('strength')
+        self.name = data.get('name')
+        self.cation = data.get('cation')
+        self.anion = data.get('anion')
+        self.theoreticalInfiniteDilutionConductivity = data.get('theoreticalInfiniteDilutionConductivity')
+        self.alpha = data.get('alpha')
+        self.length = data.get('length')
+        self.concentrations = data.get('concentrations', [])
+        self.temperatures = data.get('temperatures', [])
+        self.mode = data.get('mode')
+        if self.mode == 'concentrations':
+            self.storedC = data.get('storedConductivitiesForConcentrations', [])
+        else:
+            self.storedC = data.get('storedConductivitiesForTemperatures', [])
+        for  i  in range(self.length): # Initialize storedC to 0.0 if None
+            if self.storedC[i] is None:
+                self.storedC[i] = 0.0
+        self.equivalentConductivities = data.get('equivalentConductivities', [])
+        self.kd = data.get('kd')
+        self.ph = data.get('ph')
+        self.pho = data.get('pho')
+        self.calculateEquivalentConductivity()
+        self.calculateAlpha()
+        self.calculateKd()
+        self.calculatePh()
     def __repr__(self):
-        return f"Electrolyte(name={self.name}, cation={self.cation}, anion={self.anion}, strength={self.alpha})"
+        return f"Electrolyte(name={self.name}, cation={self.cation}, anion={self.anion}, alpha={self.alpha})"
     
-    #TODO: make this class' constructor to work as to receive the data from the website and to store it in the class' attributes
+    def calculateEquivalentConductivity(self):
+        for i in range(self.length):
+            if self.storedC[i] != 0:
+                self.equivalentConductivities[i] = 1000 * self.storedC[i] / self.concentrations[i]
+            
+    def calculateAlpha(self):
+        if self.strength == 'weak':
+            for i in range(self.length):
+                if self.equivalentConductivities[i] != 0:
+                    self.alpha[i] = self.equivalentConductivities[i] / self.theoreticalInfiniteDilutionConductivity
+    
+    def calculateKd(self):
+        for i in range(self.length):
+            if self.strength == 'weak':
+                if self.alpha[i] != 0:
+                    self.kd[i] = self.alpha[i] * self.alpha[i] * self.concentrations[i] / (1 - self.alpha[i])
+            elif self.equivalentConductivities[i] != 0:
+                self.kd[i] = 0.9999 * 0.9999 * self.concentrations[i] / (1 - 0.9999)
+    
+    def calculatePh(self):
+        if self.strength == 'weak':
+            for i in range(self.length):
+                if self.alpha[i] != 0:
+                    self.ph[i] = -math.log10(self.alpha[i] * self.concentrations[i])
+        

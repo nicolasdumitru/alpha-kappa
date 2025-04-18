@@ -1,6 +1,8 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import Electrolyte
+
 
 app = Flask(__name__)
 CORS(app)
@@ -8,7 +10,11 @@ CORS(app)
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
     data = request.get_json()  # Get the JSON data from the request
-    print("Received data:", data)
+    if data:
+        # Create an instance of the Electrolyte class with the received data
+        global electrolyte
+        electrolyte = Electrolyte.Electrolyte(data)    
+    print(electrolyte.storedC)  # Print the name of the electrolyte for debugging
     
     # Process the data as needed
     # For example, save it to a file or perform calculations
