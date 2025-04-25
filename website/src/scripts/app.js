@@ -1,14 +1,15 @@
 class Electrolyte {
-    constructor(name, cation, anion, strength) {
-        this.strength = strength;
+    constructor(name, cation, anion, strength, type) {
+        this.type = type; // 'acid' or 'base', used to determine the pH and pOH
+        this.strength = strength; // 'strong' or 'weak', used to determine the dissociation
         this.name = name;
-        this.cation = cation;
-        this.anion = anion;
-        this.theoreticalInfiniteDilutionConductivity = cation + anion;
+        this.cation = cation; // used to calculate the theoretical conductivity at infinite dilution
+        this.anion = anion; // used to calculate the theoretical conductivity at infinite dilution
+        this.tcid = cation + anion; // theoretical conductivity at infinite dilution
         if (this.strength == 'strong') {
-            this.alpha = 1;
+            this.alpha = [1, 1, 1, 1, 1, 1, 1]; // strong electrolytes are fully dissociated
         } else {
-            this.alpha = [0, 0, 0, 0, 0, 0, 0];
+            this.alpha = [0, 0, 0, 0, 0, 0, 0]; // remains to be calculated for weak electrolytes
         }
         if (name != 'NaOH') {
             this.length = 7;
@@ -16,13 +17,14 @@ class Electrolyte {
             this.length = 6; // we won't calculate for C=1 for NaOH
         }
         this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
+
         this.temperatures = [25, 30, 35, 40, 45, 50, 55];
         if (name != 'KCl') {
-            this.pho = [0, 0, 0, 0, 0, 0, 0];
-            this.ph = [0, 0, 0, 0, 0, 0, 0];
+            this.pOH = [0, 0, 0, 0, 0, 0, 0];
+            this.pH = [0, 0, 0, 0, 0, 0, 0];
         }
     
-        this.equivalentConductivities = [0, 0, 0, 0, 0, 0, 0];
+        this.mc = [0, 0, 0, 0, 0, 0, 0]; // molar conductivities
         this.kd = [0, 0, 0, 0, 0, 0, 0];
         this.isGraph1 = false;
         this.isGraph2 = false;
@@ -34,10 +36,10 @@ class Electrolyte {
 }
 
 // Create electrolyte objects
-const hcl = new Electrolyte('HCl', 349.6, 76.4, 'strong');
-const naoh = new Electrolyte('NaOH', 50.1, 197.8, 'strong');
-const kcl = new Electrolyte('KCl', 73.5, 76.4, 'strong');
-const aceticAcid = new Electrolyte('CH₃COOH', 349.6, 40.9, 'weak');
+const hcl = new Electrolyte('HCl', 349.6, 76.4, 'strong',"acid");
+const naoh = new Electrolyte('NaOH', 50.1, 197.8, 'strong',"base");
+const kcl = new Electrolyte('KCl', 73.5, 76.4, 'strong',"salt");
+const aceticAcid = new Electrolyte('CH₃COOH', 349.6, 40.9, 'weak',"acid");
 
 // Store the electrolytes in an object for easy access
 const electrolytes = {
@@ -171,19 +173,13 @@ document.getElementById('generateGraphButton').addEventListener('click', () => {
     const selectedElectrolyte = electrolytes[selectedSolution];
     const dataToSend = {
         mode: currentMode,
+        type: selectedElectrolyte.type,
         strength: selectedElectrolyte.strength,
         name: selectedElectrolyte.name,
-        cation: selectedElectrolyte.cation,
-        anion: selectedElectrolyte.anion,
-        theoreticalInfiniteDilutionConductivity: selectedElectrolyte.theoreticalInfiniteDilutionConductivity,
-        alpha: selectedElectrolyte.alpha,
+        theoreticalConductivityAtInfiniteDilution: selectedElectrolyte.tcid,
         length: selectedElectrolyte.length,
         concentrations: selectedElectrolyte.concentrations,
         temperatures: selectedElectrolyte.temperatures,
-        equivalentConductivities: selectedElectrolyte.equivalentConductivities,
-        kd: selectedElectrolyte.kd,
-        ph: selectedElectrolyte.ph,
-        pho: selectedElectrolyte.pho,
         storedConductivitiesForConcentrations: selectedElectrolyte.storedConductivitiesForConcentrations,
         storedConductivitiesForTemperatures: selectedElectrolyte.storedConductivitiesForTemperatures,
     };

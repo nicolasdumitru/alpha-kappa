@@ -13,8 +13,14 @@ def receive_data():
     if data:
         # Create an instance of the Electrolyte class with the received data
         global electrolyte
-        electrolyte = Electrolyte.Electrolyte(data)    
-    print(electrolyte.storedC)  # Print the name of the electrolyte for debugging
+        electrolyte = Electrolyte.Electrolyte(data)
+    print("Name: "+str(electrolyte.name))
+    print("type: "+ str(electrolyte.type))    
+    print("MC: "+str(electrolyte.mc))  # Print something for debugging
+    print("Alpha: "+str(electrolyte.alpha))
+    print("Kd: "+str(electrolyte.kd))
+    print("pH: "+str(electrolyte.pH))
+    print("pOH: "+str(electrolyte.pOH))
     
     # Process the data as needed
     # For example, save it to a file or perform calculations
