@@ -1,24 +1,23 @@
 # Alpha-Kappa
 
 ## Dependencies
-
-TODO: Add a list of dependencies and/or a nix shell file to create a reproducible environment.
-
-## Installation:
-Clone the repository:
-```bash
-git clone https://github.com/your-username/alpha-kappa.git
-cd alpha-kappa
-```
-Install dependencies:
-TODO
+ - All project dependencies and their versions are managed via Nix flake files.
+ - Install [Nix](https://nixos.org/) with flakes enabled (see their docs).
+ - Install [just](https://github.com/casey/just) (see their docs).
 
 ## Usage
-Start the server in a background process (using Bash or another POSIX shell):
+All commands assume your shell’s working directory is the root of the project.
+
+Enter the development environment:
 ```bash
-python3 "$(git rev-parse) --show-toplevel"/server/main.py
+just develop
+```
+
+Start the server in the development environment shell:
+```bash
+python3 server/main.py
 ```
 Then, in another shell, open the frontend in your browser:
 ```bash
-chromium "$(git rev-parse) --show-toplevel"/frontend/index.html & disown
+chromium frontend/index.html & disown
 ```
