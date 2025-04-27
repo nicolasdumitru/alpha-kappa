@@ -3,38 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conductivity Graph</title>
+    <title>Conductivity Study</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- moved the chart.js -->
 </head>
 <body>
-    <div>
-        <label for="solutionSelector">Selectați soluția:</label>
-        <select id="solutionSelector">
+    <div id="studySelector">
+        <button id="concentrationButton">Studiul Concentrației</button>
+        <button id="temperatureButton">Studiul Temperaturii</button>
+    </div>
+
+    <!-- Concentration Study Container -->
+    <div id="concentrationContainer" hidden>
+        <h2>Studiul Influenței Concentrației</h2>
+        <label for="electrolyteSelector">Selectați soluția:</label>
+        <select id="electrolyteSelector">
             <option value="" disabled selected>Alegeți o soluție</option>
             <option value="HCl">HCl</option>
             <option value="KCl">KCl</option>
             <option value="NaOH">NaOH</option>
             <option value="CH₃COOH">CH₃COOH</option>
         </select>
+
+        <div id="concentrationInputContainer">
+            <!-- Input fields for concentrations will be dynamically added here -->
+        </div>
+
+        <div>
+            <button id="concentrationGenerateButton" hidden>Generați graficul</button>
+        </div>
+
+        <div id="concentrationTableContainer"></div>
+        <canvas id="concentrationGraphContainer"></canvas>
     </div>
 
-    <div id="inputContainer">
-        <!-- Input fields will be dynamically added here -->
+    <!-- Temperature Study Container -->
+    <div id="temperatureContainer" hidden>
+        <h2>Studiul Temperaturii pentru KOH</h2>
+        <div id="temperatureInputContainer">
+            <!-- Input fields for temperatures will be dynamically added here -->
+        </div>
+
+        <div>
+            <button id="temperatureGenerateButton">Generați graficul</button>
+        </div>
+
+        <div id="temperatureTableContainer"></div>
+        <canvas id="temperatureGraphContainer"></canvas>
     </div>
 
-    <div>
-        <button id="generateGraphButton" hidden>Generați graficul</button>
-    </div>
-
-    <div>
-        <button id="toggleModeButton" hidden>Schimbă la temperaturi</button>
-    </div>
-
-    <div id="chartContainer" style="margin-top: 20px;">
-        <!-- The graph will be dynamically added here -->
-    </div>
-
-    <script src="scripts/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/temperature.js"></script>
+    <script src="scripts/switch.js"></script>
+    <script src="scripts/concentration.js"></script>
+    
 </body>
 </html>
