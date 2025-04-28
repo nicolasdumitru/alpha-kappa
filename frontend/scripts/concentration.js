@@ -7,6 +7,9 @@ class Electrolyte {
         this.anion = anion; // used to calculate the theoretical conductivity at infinite dilution
         this.tcid = cation + anion; // theoretical conductivity at infinite dilution
         this.alpha = [0, 0, 0, 0, 0, 0, 0]; // initially set to 0
+
+        if(this.strength === 'strong') // strong electrolytes have a linear regression, therefore we can calculate gcid = B, where y=A*x+B
+            this.gcid = 0.0 // initialize graphical conductivity at infinite dilution (it will be received back from the server)
         
         if(name !='NaOH')
         this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
@@ -96,7 +99,7 @@ function updateInputFields(electrolyte) {
     data = electrolyte.concentrations;
     storedValues = electrolyte.conductivities;
     labelPrefix = 'Concentrație';
-    unit = 'mol/m³';
+    unit = 'mol/L';
     
 
     // Dynamically create rows with labels and input fields
@@ -216,6 +219,8 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
                 selectedElectrolyte.kd = responseData.kd;
                 selectedElectrolyte.pH = responseData.pH;
                 selectedElectrolyte.pOH = responseData.pOH;
+                if(selectedElectrolyte.strength === 'strong')
+                    selectedElectrolyte.gcid=responseData.B;
                 selectedElectrolyte.A = responseData.A;
                 selectedElectrolyte.B = responseData.B;
                 
@@ -243,12 +248,15 @@ function createResultTableAndGraph(electrolyte) {
     // Create header
     const header = table.insertRow();
     const headers = [
-        'Concentrație (mol / m^3) / Temperatură (°C)',
+        'Concentrație (mol / L)',
         'Conductivitate măsurată (λ)',
         'Conductivitate molară (Λ)',
         'Coeficient de disociere (α)',
-        'Constanta de disociere (Kd)',
     ];
+
+    if(electrolyte.strength === 'weak')
+        headers.push('Constanta de disociere (Kd)');
+
     if (electrolyte.name !== 'KCl') {
         headers.push('pH');
         headers.push('pOH');
@@ -275,8 +283,11 @@ function createResultTableAndGraph(electrolyte) {
                 storedConductivities[i],
                 electrolyte.mc[i],
                 electrolyte.alpha[i],
-                electrolyte.kd[i],
             ];
+
+            if(electrolyte.strength ==='weak')
+                cells.push(electrolyte.kd[i]);
+
             if (electrolyte.name !== 'KCl') {
                 cells.push(electrolyte.pH[i]);
                 cells.push(electrolyte.pOH[i]);
@@ -375,13 +386,13 @@ function createResultTableAndGraph(electrolyte) {
                         type: 'linear',
                         title: {
                             display: true,
-                            text: 'Concentrația (mol/m³)',
+                            text: 'Concentrația (mol/L)',
                         },
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitatea molară (S·m²/mol)',
+                            text: 'Conductivitatea molară (S·cm²/mol)',
                         },
                     },
                 },

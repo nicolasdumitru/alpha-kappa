@@ -27,10 +27,14 @@ class Electrolyte:
         self.name = data.get("name")
         self.tcid = np.float64(data.get("theoreticalConductivityAtInfiniteDilution"))
         self.concentrations = np.array(data.get("concentrations", []), dtype=np.float64)
-        self.temperatures = np.array(data.get("temperatures", []), dtype=np.float64)
 
         # initialize the graphical conductivity at infinite dilution
         self.gcid = np.float64(0)
+        
+        # initialize the elements for the mathematical regression y=A*x+B (strong electrolyte) or y=A*e^(B*x) (weak electrolyte)
+        # we need these two inside the class for the toDict() method, but they are calculated 
+        self.A=0.0
+        self.B=0.0
 
         self.conductivities = np.array(data.get("conductivities", []), dtype=np.float64)
 
@@ -39,8 +43,9 @@ class Electrolyte:
 
         # initialize dissociation coeficients:
         self.alpha = self.mc / self.tcid
-
+        
         self.kd = self.mc**2 * self.concentrations / (self.tcid * (self.tcid - self.mc))
+
 
         # initialize pH & pOH
         if self.type == Acid:
@@ -53,7 +58,7 @@ class Electrolyte:
             self.ph = np.array([0.0], dtype=np.float64)
             self.poh = np.array([0.0], dtype=np.float64)
 
-    def display_attributes(self):
+    def displayAttributes(self):
         print("mode:", self.mode)
         print("name:", self.name)
         print("type:", self.type)
@@ -65,13 +70,13 @@ class Electrolyte:
         print("pH:", self.ph)
         print("pOH:", self.poh)
 
-    def to_dict(self):
+    def toDict(self):
         return {
             "mc": self.mc.tolist(),
             "alpha": self.alpha.tolist(),
             "kd": self.kd.tolist(),
             "pH": self.ph.tolist(),
             "pOH": self.poh.tolist(),
-            "A": self.a,
-            "B": self.b,
+            "A": self.A,
+            "B": self.B,
         }
