@@ -1,3 +1,4 @@
+// NOTE: user must introduce conductivities in μS/cm and then be converted into S/cm
 class TemperatureStudy {
     constructor(name) {
         this.name = name;
@@ -122,7 +123,7 @@ class TemperatureStudy {
                     } else {
                         const floatValue = parseFloat(value);
                         if (!isNaN(floatValue)) {
-                            this.conductivities[i][j] = floatValue;
+                            this.conductivities[i][j] = floatValue/1000000; // convert μS to S 
                         }
                     }
                 });
@@ -156,13 +157,7 @@ class TemperatureStudy {
     }
 
     // Generate graph based on input conductivities
-    generateTemperatureGraph() {
-        const validTemperatures = this.checkFilledFields();
-
-        if (validTemperatures.length === 0) {
-            alert("Te rog să introduci măcar 2 pentru una din temperaturi");
-            return;
-        }
+    generateTemperatureGraph(validTemperatures) {
 
         const validConcentrations = [];
         const validConductivities = [];
@@ -245,13 +240,7 @@ class TemperatureStudy {
     }
 
     // Generate graph for molar conductivity vs concentration
-generateMolarConductivityGraph() {
-    const validTemperatures = this.checkFilledFields();
-
-    if (validTemperatures.length === 0) {
-        alert("Te rog să introduci măcar 2 pentru una din temperaturi");
-        return;
-    }
+generateMolarConductivityGraph(validTemperatures) {
 
     const validConcentrations = [];
     const validMolarConductivities = [];
@@ -336,6 +325,16 @@ temperatureStudy.createTemperatureInputs();
 document.getElementById('temperatureGenerateButton').addEventListener('click', () => {
     //temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
     temperatureStudy.calculateMc();
-    temperatureStudy.generateTemperatureGraph();
-    temperatureStudy.generateMolarConductivityGraph();
+    const validTemperatures = temperatureStudy.checkFilledFields();
+
+    if (validTemperatures.length === 0) {
+        alert("Te rog să introduci măcar 2 pentru una din temperaturi");
+        return;
+    }
+    else
+    {
+        temperatureStudy.generateTemperatureGraph(validTemperatures);
+        temperatureStudy.generateMolarConductivityGraph(validTemperatures);
+    }
+    
 });

@@ -1,3 +1,10 @@
+/* NOTE: regardless of the unit of measurement that the user provides, the program will always convert that unit of measurement
+ to the unit of measurement used in the international system and each time we will have to display a specific unit, we will always
+ convert from the international system to that specific unit.
+
+ For concentration study, the user must introduce conductivity in μS/cm!
+
+*/
 class Electrolyte {
     constructor(name, cation, anion, strength, type) {
         this.type = type; // 'acid' or 'base', used to determine the pH and pOH
@@ -8,13 +15,13 @@ class Electrolyte {
         this.tcid = cation + anion; // theoretical conductivity at infinite dilution
         this.alpha = [0, 0, 0, 0, 0, 0, 0]; // initially set to 0
 
-        if(this.strength === 'strong') // strong electrolytes have a linear regression, therefore we can calculate gcid = B, where y=A*x+B
+        if (this.strength === 'strong') // strong electrolytes have a linear regression, therefore we can calculate gcid = B, where y=A*x+B
             this.gcid = 0.0 // initialize graphical conductivity at infinite dilution (it will be received back from the server)
-        
-        if(name !='NaOH')
-        this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
+
+        if (name != 'NaOH')
+            this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
         else
-        this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1]; // NaOH doesn't have C=1
+            this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1]; // NaOH doesn't have C=1
 
         // initliazing all the arrays
         this.mc = [0, 0, 0, 0, 0, 0, 0]; // molar conductivities
@@ -24,25 +31,24 @@ class Electrolyte {
 
         // New fields to store entered conductivities
         this.conductivities = Array(this.concentrations.length).fill(null);
-        
+
         // Flag to check if the table and graph have been generated
-        this.generated = false; 
-        
+        this.generated = false;
+
         this.A = 0; // First component of the exponential/linear regression
         this.B = 0; // Second component of the exponential/linear regression
 
     }
-    
+
     // Function used to test the data from excel without manual introduction in the input fields
-    initializeConductivities()
-    {
-        this.conductivities[0]=0.0000339; 
-        this.conductivities[1]=0.0000492;
-        this.conductivities[2]=0.000115;
-        this.conductivities[3]=0.000163;
-        this.conductivities[4]=0.00037;
-        this.conductivities[5]=0.00052;
-        this.conductivities[6]=0.00125;
+    initializeConductivities() {
+        this.conductivities[0] = 0.0000339;   // 33.9 μS/cm  = 0.0000339 S/cm
+        this.conductivities[1] = 0.0000492;  // 49.2 μS/cm  = 0.0000492 S/cm
+        this.conductivities[2] = 0.000115;   // 115 μS/cm  = 0.000115 S/cm
+        this.conductivities[3] = 0.000163;   // 163 μS/cm  = 0.000163 S/cm
+        this.conductivities[4] = 0.00037;   // 370 μS/cm  = 0.00037 S/cm
+        this.conductivities[5] = 0.00052;   // 520 μS/cm  = 0.00052 S/cm
+        this.conductivities[6] = 0.00125;  // 1250 μS/cm  = 0.00125 S/cm
     }
 }
 
@@ -73,8 +79,8 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
 
     updateInputFields(selectedElectrolyte);
 
-     // Recreate the table and the graph if they existed before
-     if (selectedElectrolyte.generated) {
+    // Recreate the table and the graph if they existed before
+    if (selectedElectrolyte.generated) {
         const tableContainer = document.getElementById('concentrationTableContainer');
         tableContainer.innerHTML = ''; // Clear previous table and graph
         createResultTableAndGraph(selectedElectrolyte); // Create the table and graph again
@@ -100,7 +106,7 @@ function updateInputFields(electrolyte) {
     storedValues = electrolyte.conductivities;
     labelPrefix = 'Concentrație';
     unit = 'mol/L';
-    
+
 
     // Dynamically create rows with labels and input fields
     for (let i = 0; i < electrolyte.concentrations.length; i++) {
@@ -117,30 +123,30 @@ function updateInputFields(electrolyte) {
         const inputField = document.createElement('input');
         inputField.type = 'number';
         inputField.step = 'any'; // Allow float values
-        inputField.placeholder = 'Introduceți conductivitatea măsurată (S/m)';
+        inputField.placeholder = 'Introduceți conductivitatea măsurată (μS/cm)';
         inputField.id = `input-${i}`;
         inputField.className = 'dynamic-input'; // Add a class for styling
 
         // Restore the stored value if it exists
         if (storedValues[i] !== null) {
-            inputField.value = storedValues[i];
+            inputField.value = storedValues[i]*1000000; // convert S to μS
         }
 
         // Add an event listener to dynamically update the stored values
         inputField.addEventListener('input', (event) => {
             if (electrolyte.generated) // Clear previous table and graph if they exist when typing
-                    {
-                        electrolyte.generated = false; // Reset the table creation flag
-                        let tableContainer = document.getElementById('concentrationTableContainer');
-                        tableContainer.innerHTML = '';
-                    }
+            {
+                electrolyte.generated = false; // Reset the table creation flag
+                let tableContainer = document.getElementById('concentrationTableContainer');
+                tableContainer.innerHTML = '';
+            }
             const value = event.target.value.trim();
             if (value === '') {
                 storedValues[i] = null; // Remove the value if the input is empty
             } else {
                 const floatValue = parseFloat(value);
                 if (!isNaN(floatValue)) {
-                    storedValues[i] = floatValue; // Store the entered float value
+                    storedValues[i] = floatValue/1000000; // Store the entered float value / 10^6 (convert from μS to S)
 
                 } else {
 
@@ -165,8 +171,8 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     const selectedElectrolyte = electrolytes[selectedSolution];
 
     // Only use this to check if the values from the table and the graph are good
-    // if(selectedElectrolyte==aceticAcid)
-    // selectedElectrolyte.initializeConductivities();
+    // if (selectedElectrolyte == aceticAcid)
+    //     selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -219,11 +225,11 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
                 selectedElectrolyte.kd = responseData.kd;
                 selectedElectrolyte.pH = responseData.pH;
                 selectedElectrolyte.pOH = responseData.pOH;
-                if(selectedElectrolyte.strength === 'strong')
-                    selectedElectrolyte.gcid=responseData.B;
+                if (selectedElectrolyte.strength === 'strong')
+                    selectedElectrolyte.gcid = responseData.B;
                 selectedElectrolyte.A = responseData.A;
                 selectedElectrolyte.B = responseData.B;
-                
+
                 createResultTableAndGraph(selectedElectrolyte); // Now create the table and the graph
                 selectedElectrolyte.generated = true; // Set the flag to true
 
@@ -249,20 +255,25 @@ function createResultTableAndGraph(electrolyte) {
     const header = table.insertRow();
     const headers = [
         'Concentrație (mol / L)',
-        'Conductivitate măsurată (λ)',
-        'Conductivitate molară (Λ)',
+        'Conductivitate măsurată λ (μS/cm)',
+        'Conductivitate măsurată λ (S/cm)',
+        'Conductivitate molară Λ(S·cm²/mol)',
         'Coeficient de disociere (α)',
     ];
 
-    if(electrolyte.strength === 'weak')
-        headers.push('Constanta de disociere (Kd)');
+    if (electrolyte.strength === 'weak')
+        headers.push('Constanta de disociere Kd (mol/L)');
 
     if (electrolyte.name !== 'KCl') {
-        headers.push('pH');
-        headers.push('pOH');
+        if(electrolyte.type === 'acid'){
+            headers.push('pH');
+            headers.push('pOH');
+        }
+        else {
+            headers.push('pOH');
+            headers.push('pH');
+        }
     }
-
-    headers.push('Λ⁰ (Λ la diluție infinită)');
 
     headers.forEach(text => {
         const th = document.createElement('th');
@@ -271,28 +282,34 @@ function createResultTableAndGraph(electrolyte) {
     });
 
     // Fill the rows
-    const dataArray =  electrolyte.concentrations;
+    const dataArray = electrolyte.concentrations;
     const storedConductivities = electrolyte.conductivities;
 
     for (let i = 0; i < electrolyte.concentrations.length; i++) {
         if (storedConductivities[i] !== null) {
             const row = table.insertRow();
-
+            let microStoredConductivities = storedConductivities.map(c => c * 1000000);
             const cells = [
                 dataArray[i],
+                microStoredConductivities[i],
                 storedConductivities[i],
                 electrolyte.mc[i],
                 electrolyte.alpha[i],
             ];
 
-            if(electrolyte.strength ==='weak')
+            if (electrolyte.strength === 'weak')
                 cells.push(electrolyte.kd[i]);
 
             if (electrolyte.name !== 'KCl') {
-                cells.push(electrolyte.pH[i]);
-                cells.push(electrolyte.pOH[i]);
+                if (electrolyte.type === 'acid') {
+                    cells.push(electrolyte.pH[i]);
+                    cells.push(electrolyte.pOH[i]);
+                }
+                else {
+                    cells.push(electrolyte.pOH[i]); 
+                    cells.push(electrolyte.pH[i]);
+                }
             }
-            cells.push(electrolyte.tcid);
 
             cells.forEach(cellData => {
                 const cell = row.insertCell();
@@ -306,48 +323,48 @@ function createResultTableAndGraph(electrolyte) {
     //==============================================
 
     // Now, let's generate the graph:
-    if(electrolyte.strength == 'weak') {
+    if (electrolyte.strength == 'weak') {
         let graphContainer = document.getElementById('concentrationGraphContainer');
 
         // If it already exists, remove it and recreate it
         if (graphContainer) {
             graphContainer.remove();
         }
-        
+
         graphContainer = document.createElement('div');
         graphContainer.id = 'concentrationGraphContainer';
         graphContainer.style.marginTop = '30px'; // some space
         tableContainer.appendChild(graphContainer);
-        
+
         const canvas = document.createElement('canvas');
         canvas.id = 'myGraph';
         graphContainer.appendChild(canvas);
-        
+
         // Step 1: Get valid concentrations (where storedConductivities is not null)
         const validConcentrations = [];
         const validMolarConductivities = [];
-        
+
         for (let i = 0; i < electrolyte.concentrations.length; i++) {
             if (storedConductivities[i] != null) {
                 validConcentrations.push(electrolyte.concentrations[i]);
                 validMolarConductivities.push(electrolyte.mc[i]);
             }
         }
-        
+
         // Step 2: Create the exponential regression curve using y = A * e^(B * x)
         const xMin = Math.min(...validConcentrations);
         const xMax = Math.max(...validConcentrations);
         const steps = 400; // Number of steps for smoothness
         const stepSize = (xMax - xMin) / steps;
         const curvePoints = [];
-        
+
         // Generate points for the regression curve
         for (let i = 0; i < steps; i++) { // Change to '<' instead of '<='
             const x = xMin + i * stepSize;
             const y = electrolyte.A * Math.exp(electrolyte.B * x);
             curvePoints.push({ x: x, y: y });
         }
-        
+
         // Step 3: Plot the graph using Chart.js
         const ctx = document.getElementById('myGraph').getContext('2d');
         const myChart = new Chart(ctx, {
@@ -362,7 +379,7 @@ function createResultTableAndGraph(electrolyte) {
                         fill: false,
                         pointRadius: 0,
                         parsing: false, // Important: Treat data as {x,y}
-                            // Important: no tension, points already make the curve smooth
+                        // Important: no tension, points already make the curve smooth
                     },
                     {
                         label: 'Conductivitatea molară',
@@ -399,7 +416,7 @@ function createResultTableAndGraph(electrolyte) {
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 const x = context.raw.x;
                                 const y = context.raw.y;
                                 return `(${x.toFixed(4)}, ${y.toFixed(4)})`; // prettier tooltip
@@ -409,9 +426,9 @@ function createResultTableAndGraph(electrolyte) {
                 },
             }
         });
-        
+
     }
-    else{ //  electrolyte.strength == 'strong'
+    else { //  electrolyte.strength == 'strong'
         //TODO create the graph for strong electrolytes based on the linear regression
     }
 
