@@ -15,3 +15,8 @@ alias dev := develop
 # Update the lockfile and commit it
 update:
     nix flake update --commit-lock-file
+
+# Format all Python files
+format:
+    black $(fd '\.py' --full-path "$(git rev-parse --show-toplevel)")
+alias fmt := format
