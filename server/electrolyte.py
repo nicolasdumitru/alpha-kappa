@@ -8,31 +8,29 @@ import scipy
 def linear_regression(x, y) -> tuple[np.float64, np.float64, np.float64]:
     res = scipy.stats.linregress(x, y)
     return (
-        np.float64(res.slope),
-        np.float64(res.intercept),
+        np.float64(res.slope),  # slope
+        np.float64(res.intercept),  # y-intercept
         np.float64(res.rvalue) ** 2,  # R^2
     )
 
 
-def exponential_regression(
+def monomial_regression(
     x: NDArray[np.float64], y: NDArray[np.float64]
 ) -> tuple[np.float64, np.float64, np.float64]:
-    def exp_model(x: NDArray[np.float64], a: float, b: float) -> NDArray[np.float64]:
-        return a * np.exp(b * x)
+    def model(x: NDArray[np.float64], a: float, b: float) -> NDArray[np.float64]:
+        return a * np.power(x, b)
 
-    params, _ = scipy.optimize.curve_fit(exp_model, x, y)
+    params, _ = scipy.optimize.curve_fit(model, x, y)
 
-    amplitude = np.float64(params[0])
-    rate = np.float64(params[1])
-    print(f"amplitude: {amplitude}\nrate: {rate}") # debug print
+    a = np.float64(params[0])  # scale factor (multiplicative constant)
+    b = np.float64(params[1])  # exponent
 
-    y_pred = exp_model(x, amplitude, rate)
-
+    y_pred = model(x, a, b)
     rss = np.sum(np.square(y - y_pred))
     tss = np.sum(np.square(y - np.mean(y)))
     r_squared = np.float64(1 - rss / tss)
 
-    return amplitude, rate, r_squared
+    return a, b, r_squared
 
 
 class ElectrolyteType(Enum):
@@ -96,11 +94,11 @@ class Electrolyte:
 
         # Regression:
         # strong electrolytes => linear regression
-        # weak electrolytes => exponential regression
+        # weak electrolytes => monomial regression
         x = np.sqrt(self.concentrations)  # x axis data
         y = self.mc  # y axis data
         self.a, self.b, self.r_squared = (
-            linear_regression(x, y) if self.is_strong else exponential_regression(x, y)
+            linear_regression(x, y) if self.is_strong else monomial_regression(x, y)
         )
 
     def display_attributes(self):
