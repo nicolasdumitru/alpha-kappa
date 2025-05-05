@@ -129,7 +129,7 @@ function updateInputFields(electrolyte) {
 
         // Restore the stored value if it exists
         if (storedValues[i] !== null) {
-            inputField.value = storedValues[i]*1000000; // convert S to μS
+            inputField.value = storedValues[i] * 1000000; // convert S to μS
         }
 
         // Add an event listener to dynamically update the stored values
@@ -146,7 +146,7 @@ function updateInputFields(electrolyte) {
             } else {
                 const floatValue = parseFloat(value);
                 if (!isNaN(floatValue)) {
-                    storedValues[i] = floatValue/1000000; // Store the entered float value / 10^6 (convert from μS to S)
+                    storedValues[i] = floatValue / 1000000; // Store the entered float value / 10^6 (convert from μS to S)
 
                 } else {
 
@@ -171,8 +171,8 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     const selectedElectrolyte = electrolytes[selectedSolution];
 
     // Only use this to check if the values from the table and the graph are good
-    // if (selectedElectrolyte == aceticAcid)
-    //     selectedElectrolyte.initializeConductivities();
+    if (selectedElectrolyte == aceticAcid)
+        selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -265,7 +265,7 @@ function createResultTableAndGraph(electrolyte) {
         headers.push('Constanta de disociere Kd (mol/L)');
 
     if (electrolyte.name !== 'KCl') {
-        if(electrolyte.type === 'acid'){
+        if (electrolyte.type === 'acid') {
             headers.push('pH');
             headers.push('pOH');
         }
@@ -306,7 +306,7 @@ function createResultTableAndGraph(electrolyte) {
                     cells.push(electrolyte.pOH[i]);
                 }
                 else {
-                    cells.push(electrolyte.pOH[i]); 
+                    cells.push(electrolyte.pOH[i]);
                     cells.push(electrolyte.pH[i]);
                 }
             }
@@ -324,108 +324,81 @@ function createResultTableAndGraph(electrolyte) {
 
     // Now, let's generate the graph:
     if (electrolyte.strength == 'weak') {
-        let graphContainer = document.getElementById('concentrationGraphContainer');
+        const bottomLimit = 0.0005;
+        const upperLimit = 1;
+        const stepSize = (upperLimit - bottomLimit) / 100;
 
-        // If it already exists, remove it and recreate it
+        // Ensure regression is populated before chart
+        const regression = generateData(bottomLimit, upperLimit, stepSize);
+        console.log(regression);
+
+        let graphContainer = document.getElementById('concentrationGraphContainer');
         if (graphContainer) {
             graphContainer.remove();
         }
 
         graphContainer = document.createElement('div');
         graphContainer.id = 'concentrationGraphContainer';
-        graphContainer.style.marginTop = '30px'; // some space
         tableContainer.appendChild(graphContainer);
 
         const canvas = document.createElement('canvas');
         canvas.id = 'myGraph';
         graphContainer.appendChild(canvas);
 
-        // Step 1: Get valid concentrations (where storedConductivities is not null)
-        const validConcentrations = [];
-        const validMolarConductivities = [];
-
-        for (let i = 0; i < electrolyte.concentrations.length; i++) {
-            if (storedConductivities[i] != null) {
-                validConcentrations.push(electrolyte.concentrations[i]);
-                validMolarConductivities.push(electrolyte.mc[i]);
-            }
-        }
-
-        // Step 2: Create the exponential regression curve using y = A * e^(B * x)
-        const xMin = Math.min(...validConcentrations);
-        const xMax = Math.max(...validConcentrations);
-        const steps = 400; // Number of steps for smoothness
-        const stepSize = (xMax - xMin) / steps;
-        const curvePoints = [];
-
-        // Generate points for the regression curve
-        for (let i = 0; i < steps; i++) { // Change to '<' instead of '<='
-            const x = xMin + i * stepSize;
-            const y = electrolyte.A * Math.exp(electrolyte.B * x);
-            curvePoints.push({ x: x, y: y });
-        }
-
-        // Step 3: Plot the graph using Chart.js
+        // Draw the chart
         const ctx = document.getElementById('myGraph').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'line',
+        new Chart(ctx, {
             data: {
+                labels: electrolyte.concentrations,
                 datasets: [
                     {
-                        label: 'Curba de regresie exponențială',
-                        data: curvePoints,
-                        borderColor: 'blue',
-                        borderWidth: 2,
-                        fill: false,
-                        pointRadius: 0,
-                        parsing: false, // Important: Treat data as {x,y}
-                        // Important: no tension, points already make the curve smooth
+                        type: 'scatter',
+                        label: 'Conductivitate molară',
+                        data: electrolyte.mc,
+                        pointRadius: 5,
+                        backgroundColor: 'red'
                     },
                     {
-                        label: 'Conductivitatea molară',
-                        data: validConcentrations.map((concentration, index) => ({
-                            x: concentration,
-                            y: validMolarConductivities[index],
-                        })),
-                        borderColor: 'red',
-                        backgroundColor: 'red',
-                        pointRadius: 5,
-                        showLine: false,
-                        //parsing: false, // <=== Needed for manual x,y pairs
+                        type: 'line',
+                        label: 'Regresie',
+                        data: regression,
+                        borderColor: 'blue',
+                        fill: false,
+                        pointRadius: 0,
                     }
                 ]
             },
             options: {
                 responsive: true,
-                parsing: false, // globally disables auto-parsing of labels/y
                 scales: {
                     x: {
                         type: 'linear',
                         title: {
                             display: true,
-                            text: 'Concentrația (mol/L)',
-                        },
+                            text: 'Concentrație (mol/L)'
+                        }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitatea molară (S·cm²/mol)',
-                        },
-                    },
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const x = context.raw.x;
-                                const y = context.raw.y;
-                                return `(${x.toFixed(4)}, ${y.toFixed(4)})`; // prettier tooltip
-                            }
+                            text: 'Conductivitate molară (S·cm²/mol)'
                         }
-                    },
-                },
+                    }
+                }
             }
         });
+
+        // Generate regression data
+        function generateData(bottomLimit, upperLimit, stepSize) {
+            const regressionPoints = [];
+            for (let x = bottomLimit; x <= upperLimit; x += stepSize) {
+                regressionPoints.push({
+                    x: x,
+                    y: electrolyte.A * Math.pow(Math.sqrt(x), electrolyte.B)
+                });
+            }
+            return regressionPoints;
+        }
 
     }
     else { //  electrolyte.strength == 'strong'
