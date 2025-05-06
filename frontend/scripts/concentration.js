@@ -42,13 +42,41 @@ class Electrolyte {
 
     // Function used to test the data from excel without manual introduction in the input fields
     initializeConductivities() {
-        this.conductivities[0] = 0.0000339;   // 33.9 μS/cm  = 0.0000339 S/cm
-        this.conductivities[1] = 0.0000492;  // 49.2 μS/cm  = 0.0000492 S/cm
-        this.conductivities[2] = 0.000115;   // 115 μS/cm  = 0.000115 S/cm
-        this.conductivities[3] = 0.000163;   // 163 μS/cm  = 0.000163 S/cm
-        this.conductivities[4] = 0.00037;   // 370 μS/cm  = 0.00037 S/cm
-        this.conductivities[5] = 0.00052;   // 520 μS/cm  = 0.00052 S/cm
-        this.conductivities[6] = 0.00125;  // 1250 μS/cm  = 0.00125 S/cm
+        if (this == aceticAcid) {
+            this.conductivities[0] = 0.0000339;   // 33.9 μS/cm  = 0.0000339 S/cm
+            this.conductivities[1] = 0.0000492;  // 49.2 μS/cm  = 0.0000492 S/cm
+            this.conductivities[2] = 0.000115;   // 115 μS/cm  = 0.000115 S/cm
+            this.conductivities[3] = 0.000163;   // 163 μS/cm  = 0.000163 S/cm
+            this.conductivities[4] = 0.00037;   // 370 μS/cm  = 0.00037 S/cm
+            this.conductivities[5] = 0.00052;   // 520 μS/cm  = 0.00052 S/cm
+            this.conductivities[6] = 0.00125;  // 1250 μS/cm  = 0.00125 S/cm
+        }
+        else if (this == naoh) {
+            this.conductivities[0] = 0.00012245;
+            this.conductivities[1] = 0.0002445;
+            this.conductivities[2] = 0.001203;
+            this.conductivities[3] = 0.00238;
+            this.conductivities[4] = 0.01138;
+            this.conductivities[5] = 0.02212;
+        }
+        else if (this == hcl) {
+            this.conductivities[0] = 0.00021135;
+            this.conductivities[1] = 0.0004214;
+            this.conductivities[2] = 0.002079;
+            this.conductivities[3] = 0.00412;
+            this.conductivities[4] = 0.019955;
+            this.conductivities[5] = 0.03913;
+            this.conductivities[6] = 0.3328;
+        }
+        else if (this == kcl) {
+            this.conductivities[0] = 0.0000739;
+            this.conductivities[1] = 0.0001469;
+            this.conductivities[2] = 0.0007175;
+            this.conductivities[3] = 0.001413;
+            this.conductivities[4] = 0.00667;
+            this.conductivities[5] = 0.0129;
+            this.conductivities[6] = 0.1119;
+        }
     }
 }
 
@@ -84,10 +112,25 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
         const tableContainer = document.getElementById('concentrationTableContainer');
         tableContainer.innerHTML = ''; // Clear previous table and graph
         createResultTableAndGraph(selectedElectrolyte); // Create the table and graph again
+        // Update graphical conductivity (gcid) display if the electrolyte is strong
+        if (selectedElectrolyte.strength === 'strong') {
+            const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
+            if (selectedElectrolyte.gcid) {
+                gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${selectedElectrolyte.gcid.toFixed(2)}`;
+                gcidLabel.style.display = 'inline';
+            }
+        }
+        else{ // hide the gcid, because there is no gcid for weak electrolytes
+            const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
+        gcidLabel.style.display = 'none'; // Hide it
+        }
     }
-    else { // If the table and graph hadn't been generated before, then only remove the previous table and graph
+    else { // If the table and graph hadn't been generated before, then remove the previous table and graph
         const tableContainer = document.getElementById('concentrationTableContainer');
         tableContainer.innerHTML = ''; // Clear previous table and graph
+
+        const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
+        gcidLabel.style.display = 'none'; // Hide it
     }
 });
 
@@ -171,8 +214,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     const selectedElectrolyte = electrolytes[selectedSolution];
 
     // Only use this to check if the values from the table and the graph are good
-    if (selectedElectrolyte == aceticAcid)
-        selectedElectrolyte.initializeConductivities();
+    // selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -231,6 +273,12 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
                 selectedElectrolyte.B = responseData.B;
 
                 createResultTableAndGraph(selectedElectrolyte); // Now create the table and the graph
+                // Update the gcid label if the electrolyte is strong
+                if (selectedElectrolyte.strength === 'strong' && selectedElectrolyte.gcid) {
+                    const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
+                    gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${selectedElectrolyte.gcid.toFixed(2)}`;
+                    gcidLabel.style.display = 'inline'; // Make it visible
+                }
                 selectedElectrolyte.generated = true; // Set the flag to true
 
             })
@@ -242,7 +290,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
 
 });
 
-// CREATE THE TABLE
+// CREATE THE TABLE AND THE GRAPH
 function createResultTableAndGraph(electrolyte) {
     electrolyte.tableCreated = true;
     const tableContainer = document.getElementById('concentrationTableContainer');
@@ -258,11 +306,13 @@ function createResultTableAndGraph(electrolyte) {
         'Conductivitate măsurată λ (μS/cm)',
         'Conductivitate măsurată λ (S/cm)',
         'Conductivitate molară Λ(S·cm²/mol)',
-        'Coeficient de disociere (α)',
     ];
 
-    if (electrolyte.strength === 'weak')
+    if (electrolyte.strength === 'weak') {
+        headers.push('Coeficient de disociere (α)');
         headers.push('Constanta de disociere Kd (mol/L)');
+    }
+
 
     if (electrolyte.name !== 'KCl') {
         if (electrolyte.type === 'acid') {
@@ -282,32 +332,30 @@ function createResultTableAndGraph(electrolyte) {
     });
 
     // Fill the rows
-    const dataArray = electrolyte.concentrations;
-    const storedConductivities = electrolyte.conductivities;
-
     for (let i = 0; i < electrolyte.concentrations.length; i++) {
-        if (storedConductivities[i] !== null) {
+        if (electrolyte.conductivities[i] !== null) {
             const row = table.insertRow();
-            let microStoredConductivities = storedConductivities.map(c => c * 1000000);
+            let microConductivities = electrolyte.conductivities.map(c => c * 1000000);
             const cells = [
-                dataArray[i],
-                microStoredConductivities[i],
-                storedConductivities[i],
-                electrolyte.mc[i],
-                electrolyte.alpha[i],
+                electrolyte.concentrations[i],
+                microConductivities[i].toFixed(2),
+                electrolyte.conductivities[i],
+                electrolyte.mc[i].toFixed(2),
             ];
 
-            if (electrolyte.strength === 'weak')
-                cells.push(electrolyte.kd[i]);
+            if (electrolyte.strength === 'weak') {
+                cells.push(electrolyte.alpha[i].toFixed(6));
+                cells.push(electrolyte.kd[i].toFixed(6));
+            }
 
             if (electrolyte.name !== 'KCl') {
                 if (electrolyte.type === 'acid') {
-                    cells.push(electrolyte.pH[i]);
-                    cells.push(electrolyte.pOH[i]);
+                    cells.push(electrolyte.pH[i].toFixed(2));
+                    cells.push(electrolyte.pOH[i].toFixed(2));
                 }
                 else {
-                    cells.push(electrolyte.pOH[i]);
-                    cells.push(electrolyte.pH[i]);
+                    cells.push(electrolyte.pOH[i].toFixed(2));
+                    cells.push(electrolyte.pH[i].toFixed(2));
                 }
             }
 
@@ -324,13 +372,12 @@ function createResultTableAndGraph(electrolyte) {
 
     // Now, let's generate the graph:
     if (electrolyte.strength == 'weak') {
-        const bottomLimit = 0.0005;
-        const upperLimit = 1;
-        const stepSize = (upperLimit - bottomLimit) / 100;
+        const bottomLimit = Math.sqrt(0.0005);
+        const upperLimit = Math.sqrt(1);
+        const stepSize = (upperLimit - bottomLimit) / 400;
 
         // Ensure regression is populated before chart
-        const regression = generateData(bottomLimit, upperLimit, stepSize);
-        console.log(regression);
+        const regression = generateDataMonomial(bottomLimit, upperLimit, stepSize);
 
         let graphContainer = document.getElementById('concentrationGraphContainer');
         if (graphContainer) {
@@ -349,11 +396,11 @@ function createResultTableAndGraph(electrolyte) {
         const ctx = document.getElementById('myGraph').getContext('2d');
         new Chart(ctx, {
             data: {
-                labels: electrolyte.concentrations,
+                labels: electrolyte.concentrations.map(x => Math.sqrt(x)),
                 datasets: [
                     {
                         type: 'scatter',
-                        label: 'Conductivitate molară',
+                        label: 'Coordonate',
                         data: electrolyte.mc,
                         pointRadius: 5,
                         backgroundColor: 'red'
@@ -375,13 +422,19 @@ function createResultTableAndGraph(electrolyte) {
                         type: 'linear',
                         title: {
                             display: true,
-                            text: 'Concentrație (mol/L)'
+                            text: 'Concentrație √(mol/L)',
+                            font:{
+                                size: 20
+                            }
                         }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitate molară (S·cm²/mol)'
+                            text: 'Conductivitate molară (S·cm²/mol)',
+                            font:{
+                                size: 20
+                            }
                         }
                     }
                 }
@@ -389,12 +442,12 @@ function createResultTableAndGraph(electrolyte) {
         });
 
         // Generate regression data
-        function generateData(bottomLimit, upperLimit, stepSize) {
+        function generateDataMonomial(bottomLimit, upperLimit, stepSize) {
             const regressionPoints = [];
             for (let x = bottomLimit; x <= upperLimit; x += stepSize) {
                 regressionPoints.push({
-                    x: x,
-                    y: electrolyte.A * Math.pow(Math.sqrt(x), electrolyte.B)
+                    x: x,    
+                    y: electrolyte.A * Math.pow(x, electrolyte.B)
                 });
             }
             return regressionPoints;
@@ -402,7 +455,87 @@ function createResultTableAndGraph(electrolyte) {
 
     }
     else { //  electrolyte.strength == 'strong'
-        //TODO create the graph for strong electrolytes based on the linear regression
+        const bottomLimit = Math.sqrt(0.0005);
+        const upperLimit = Math.sqrt(electrolyte.name !== 'NaOH' ? 1 : 0.1);
+        const stepSize = (upperLimit - bottomLimit) / 100;
+
+        // Ensure regression is populated before chart
+        const regression = generateDataLinear(bottomLimit, upperLimit, stepSize);
+
+        let graphContainer = document.getElementById('concentrationGraphContainer');
+        if (graphContainer) {
+            graphContainer.remove();
+        }
+
+        graphContainer = document.createElement('div');
+        graphContainer.id = 'concentrationGraphContainer';
+        tableContainer.appendChild(graphContainer);
+
+        const canvas = document.createElement('canvas');
+        canvas.id = 'myGraph';
+        graphContainer.appendChild(canvas);
+
+        // Draw the chart
+        const ctx = document.getElementById('myGraph').getContext('2d');
+        new Chart(ctx, {
+            data: {
+                labels: electrolyte.concentrations.map(x => Math.sqrt(x)),
+                datasets: [
+                    {
+                        type: 'scatter',
+                        label: 'Coordonate',
+                        data: electrolyte.mc,
+                        pointRadius: 5,
+                        backgroundColor: 'red'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Regresie',
+                        data: regression,
+                        borderColor: 'blue',
+                        fill: false,
+                        pointRadius: 0,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: {
+                            display: true,
+                            text: 'Concentrație √(mol/L)',
+                            font:{
+                                size: 20
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Conductivitate molară (S·cm²/mol)',
+                            font:{
+                                colour: "red",
+                                size: 20
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Generate regression data
+        function generateDataLinear(bottomLimit, upperLimit, stepSize) {
+            const regressionPoints = [];
+            for (let x = 0; x <= upperLimit; x += stepSize) {
+                regressionPoints.push({
+                    x: x,
+                    y: electrolyte.A * x + electrolyte.B
+                });
+            }
+            return regressionPoints;
+        }
     }
 
 
