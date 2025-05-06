@@ -214,7 +214,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     const selectedElectrolyte = electrolytes[selectedSolution];
 
     // Only use this to check if the values from the table and the graph are good
-    selectedElectrolyte.initializeConductivities();
+    // selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
