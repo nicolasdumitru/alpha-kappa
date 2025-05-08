@@ -219,7 +219,7 @@ class TemperatureStudy {
                 const conductivity = this.conductivities[i][tempIdx];
                 const mc = this.mc[i][tempIdx];
 
-                if (conductivity !== null) {
+                if (conductivity !== null && this.concentrations[i] <= 1) { // we don't show null cells or pH and pOH for concentrations > 1
                     const row = document.createElement('tr');
 
                     const conc = this.concentrations[i];
