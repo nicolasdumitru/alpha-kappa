@@ -10,15 +10,27 @@ class TemperatureStudy {
         this.conductivities = Array(this.concentrations.length).fill(null).map(() => Array(this.temperatures.length).fill(null));
         this.mc = Array(this.concentrations.length).fill(null).map(() => Array(this.temperatures.length).fill(null));
 
-        this.generated = false;
+        this.graphsGenerated = false;
+        this.tablesGenerated = false;
     }
 
     // calculate molar conductivities
     calculateMc() {
-        for(let i=0;i<this.concentrations.length;i++)
-            for(let j=0;j<this.temperatures.length;j++)
-                if(this.conductivities[i][j]!==null)
-                    this.mc[i][j]=(1000*this.conductivities[i][j])/this.concentrations[i];
+        for (let i = 0; i < this.concentrations.length; i++)
+            for (let j = 0; j < this.temperatures.length; j++)
+                if (this.conductivities[i][j] !== null)
+                    this.mc[i][j] = (1000 * this.conductivities[i][j]) / this.concentrations[i];
+    }
+
+    // Calculate pOH and pH
+    calculatePOHAndPH(concentration) {
+        if (concentration > 0) {
+            const pOH = -Math.log10(concentration);
+            const pH = 14 - pOH;
+            return { pOH: pOH.toFixed(2), pH: pH.toFixed(2) };
+        } else {
+            return { pOH: 'N/A', pH: 'N/A' };
+        }
     }
 
     // Initialize all the conductivites values so that you dont have to manually introduce them all
@@ -97,7 +109,7 @@ class TemperatureStudy {
 
             // Row label for concentration
             const concentrationCell = document.createElement('td');
-            concentrationCell.textContent = `Concentrație ${concentration} mol/m^3`;
+            concentrationCell.textContent = `Concentrație ${concentration} mol/L`;
             row.appendChild(concentrationCell);
 
             // Input fields for each temperature at the current concentration
@@ -112,10 +124,15 @@ class TemperatureStudy {
 
                 // Set event listener to capture the input values
                 input.addEventListener('input', (event) => {
-                    if (this.generated) {
-                        // Destroy existing chart if needed
+                    if (this.graphsGenerated) {
+                        // Destroy existing charts and tables if needed
                         Chart.getChart('temperatureGraphContainer').destroy();
-                        this.generated = false;
+                        Chart.getChart('molarConductivityGraphContainer').destroy();
+                        this.graphsGenerated = false;
+                    }
+                    if (this.tablesGenerated) {
+                        document.getElementById('temperatureTablesContainer').innerHTML = '';
+                        this.tablesGenerated = false;
                     }
                     const value = event.target.value.trim();
                     if (value === '') {
@@ -123,7 +140,7 @@ class TemperatureStudy {
                     } else {
                         const floatValue = parseFloat(value);
                         if (!isNaN(floatValue)) {
-                            this.conductivities[i][j] = floatValue/1000000; // convert μS to S 
+                            this.conductivities[i][j] = floatValue / 1000000; // convert μS to S 
                         }
                     }
                 });
@@ -138,9 +155,25 @@ class TemperatureStudy {
         inputContainer.appendChild(table);
     }
 
-    // Check if all fields are filled before generating the graph
+    // Check if at least one field for one temperature is filled
+    checkAtLeastOneFilledField() {
+        let validTemperatures = [];
+
+        for (let i = 0; i < this.temperatures.length; i++) {
+            for (let j = 0; j < this.concentrations.length; j++) {
+                if (this.conductivities[j][i] !== null) {
+                    validTemperatures.push(i);
+                    break;
+                }
+            }
+        }
+        return validTemperatures;
+    }
+
+    // Check if at least 2 fields for one temperature are filled
     checkFilledFields() {
         let validTemperatures = [];
+
         for (let i = 0; i < this.temperatures.length; i++) {
             let counter = 0;
             for (let j = 0; j < this.concentrations.length; j++) {
@@ -156,6 +189,60 @@ class TemperatureStudy {
         return validTemperatures;
     }
 
+    // Generate temperature tables
+    generateTemperatureTables(validTemperatures) {
+        const container = document.getElementById('temperatureTablesContainer');
+        container.innerHTML = ''; // Clear previous tables
+
+        validTemperatures.forEach(tempIdx => {
+            const temp = this.temperatures[tempIdx];
+
+            // Create title for the table
+            const title = document.createElement('h3');
+            title.textContent = `Temperatură: ${temp} °C`;
+            container.appendChild(title);
+
+            // Create table
+            const table = document.createElement('table');
+
+            // Header row
+            const headerRow = document.createElement('tr');
+            ['Concentrație (mol/L)', 'Conductivitate (μS/cm)', 'Conductivitate (S/cm)', 'Conductivitate molară (S·cm²/mol)', 'pOH', 'pH'].forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Data rows
+            for (let i = 0; i < this.concentrations.length; i++) {
+                const conductivity = this.conductivities[i][tempIdx];
+                const mc = this.mc[i][tempIdx];
+
+                if (conductivity !== null) {
+                    const row = document.createElement('tr');
+
+                    const conc = this.concentrations[i];
+                    const { pOH, pH } = this.calculatePOHAndPH(conc);
+
+                    const µSvalue = conductivity * 1_000_000; // Convert S/cm to μS/cm
+
+                    row.innerHTML = `
+                        <td>${conc}</td>
+                        <td>${µSvalue.toFixed(2)}</td>
+                        <td>${conductivity.toFixed(6)}</td>
+                        <td>${mc !== null ? mc.toFixed(2) : '—'}</td>
+                        <td>${pOH}</td>
+                        <td>${pH}</td>
+                    `;
+
+                    table.appendChild(row);
+                }
+            }
+
+            container.appendChild(table);
+        });
+    }
     // Generate graph based on input conductivities
     generateTemperatureGraph(validTemperatures) {
 
@@ -176,95 +263,88 @@ class TemperatureStudy {
         }
 
         const canvas = document.getElementById('temperatureGraphContainer');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            if (this.generated) {
-                // Destroy existing chart if needed
-                Chart.getChart('temperatureGraphContainer').destroy();
-            }
+        const existingChart = Chart.getChart('temperatureGraphContainer');
+        if (existingChart) {
+            existingChart.destroy();
+        }
 
-            // Colors for each temperature
-            const colors = ['blue', 'orange', 'red'];
+        // Colors for each temperature
+        const colors = ['blue', 'orange', 'red'];
 
-            // Create new graph
-            const temperatureChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: validConcentrations,
-                    datasets: validTemperatures.map((tempIdx) => {
-                        const temp = this.temperatures[tempIdx];
-                        return {
-                            label: `Temp ${temp} °C`,
-                            data: validConductivities.map(conductivityArr => conductivityArr[tempIdx]), // Only include valid data
-                            borderColor: colors[tempIdx],  // Blue for 25°C, Orange for 50°C, Red for 100°C
-                            backgroundColor: `${colors[tempIdx]}99`, // Light color for the fill
-                            fill: false,
-                            pointRadius: 5,
-                            spanGaps: true,  // Ignore gaps in data, draw the line through missing points
-                        };
-                    }),
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Concentrație (mol / L)',
-                            },
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Conductivitate (S/cm)',
-                            },
+        // Create new graph
+        const temperatureChart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: validConcentrations,
+                datasets: validTemperatures.map((tempIdx) => {
+                    const temp = this.temperatures[tempIdx];
+                    return {
+                        label: `Temp ${temp} °C`,
+                        data: validConductivities.map(conductivityArr => conductivityArr[tempIdx]), // Only include valid data
+                        borderColor: colors[tempIdx],  // Blue for 25°C, Orange for 50°C, Red for 100°C
+                        backgroundColor: `${colors[tempIdx]}99`, // Light color for the fill
+                        fill: false,
+                        pointRadius: 5,
+                        spanGaps: true,  // Ignore gaps in data, draw the line through missing points
+                    };
+                }),
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Concentrație (mol / L)',
                         },
                     },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    // Get concentration and conductivity values for the tooltip
-                                    const concentration = validConcentrations[context.dataIndex];
-                                    const conductivityValue = context.raw;
-                                    return `Concentrație: ${concentration} mol/L\nConductivitate: ${conductivityValue} S/cm`;
-                                }
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Conductivitate (S/cm)',
+                        },
+                    },
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                // Get concentration and conductivity values for the tooltip
+                                const concentration = validConcentrations[context.dataIndex];
+                                const conductivityValue = context.raw;
+                                return `Concentrație: ${concentration} mol/L\nConductivitate: ${conductivityValue} S/cm`;
                             }
                         }
                     }
-                },
-            });
-
-            this.generated = true;
-        }
+                }
+            },
+        });
     }
 
     // Generate graph for molar conductivity vs concentration
-generateMolarConductivityGraph(validTemperatures) {
+    generateMolarConductivityGraph(validTemperatures) {
 
-    const validConcentrations = [];
-    const validMolarConductivities = [];
+        const validConcentrations = [];
+        const validMolarConductivities = [];
 
-    for (let i = 0; i < this.concentrations.length; i++) {
-        const mcAtTemp = this.mc[i];
-        const validMcForConcentration = mcAtTemp.filter(mcVal => mcVal != null);
+        for (let i = 0; i < this.concentrations.length; i++) {
+            const mcAtTemp = this.mc[i];
+            const validMcForConcentration = mcAtTemp.filter(mcVal => mcVal != null);
 
-        if (validMcForConcentration.length > 0) {
-            validConcentrations.push(this.concentrations[i]);
-            validMolarConductivities.push(mcAtTemp.map(mcVal => mcVal != null ? mcVal : undefined));
+            if (validMcForConcentration.length > 0) {
+                validConcentrations.push(this.concentrations[i]);
+                validMolarConductivities.push(mcAtTemp.map(mcVal => mcVal != null ? mcVal : undefined));
+            }
         }
-    }
-
-    const canvas = document.getElementById('molarConductivityGraphContainer');
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        if (this.molarGenerated) {
-            Chart.getChart('molarConductivityGraphContainer').destroy();
+        const canvas = document.getElementById('molarConductivityGraphContainer');
+        const existingChart = Chart.getChart('molarConductivityGraphContainer');
+        if (existingChart) {
+            existingChart.destroy();
         }
 
         const colors = ['blue', 'orange', 'red'];
 
-        const molarChart = new Chart(ctx, {
+        const molarChart = new Chart(canvas, {
             type: 'line',
             data: {
                 labels: validConcentrations,
@@ -310,20 +390,31 @@ generateMolarConductivityGraph(validTemperatures) {
                 }
             },
         });
-
-        this.molarGenerated = true;
     }
 }
 //END OF CLASS
-}
 
 // Initialize the temperature study and handle functionality
 const temperatureStudy = new TemperatureStudy("KOH");
 temperatureStudy.createTemperatureInputs();
 
+//temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
+
 // Event listener for generating graph after data input
+document.getElementById('createTablesButton').addEventListener('click', () => {
+    temperatureStudy.calculateMc(); // ensure molar conductivity is calculated
+    const validTemperatures = temperatureStudy.checkAtLeastOneFilledField();
+
+    if (validTemperatures.length === 0) {
+        alert("Introduceți cel puțin o valoare pentru una dintre temperaturi.");
+        return;
+    }
+
+    temperatureStudy.generateTemperatureTables(validTemperatures);
+    temperatureStudy.tablesGenerated = true;
+});
+
 document.getElementById('temperatureGenerateButton').addEventListener('click', () => {
-    //temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
     temperatureStudy.calculateMc();
     const validTemperatures = temperatureStudy.checkFilledFields();
 
@@ -331,10 +422,10 @@ document.getElementById('temperatureGenerateButton').addEventListener('click', (
         alert("Te rog să introduci măcar 2 pentru una din temperaturi");
         return;
     }
-    else
-    {
+    else {
         temperatureStudy.generateTemperatureGraph(validTemperatures);
         temperatureStudy.generateMolarConductivityGraph(validTemperatures);
+        temperatureStudy.graphsGenerated = true;
     }
-    
+
 });

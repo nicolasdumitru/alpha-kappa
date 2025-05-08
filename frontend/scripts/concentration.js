@@ -18,10 +18,10 @@ class Electrolyte {
         if (this.strength === 'strong') // strong electrolytes have a linear regression, therefore we can calculate gcid = B, where y=A*x+B
             this.gcid = 0.0 // initialize graphical conductivity at infinite dilution (it will be received back from the server)
 
-        if (name != 'NaOH')
+        if (name != 'NaOH' && name != 'KCl')
             this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 1];
         else
-            this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1]; // NaOH doesn't have C=1
+            this.concentrations = [0.0005, 0.001, 0.005, 0.01, 0.05, 0.1]; // NaOH and KCl don't have C=1
 
         // initliazing all the arrays
         this.mc = [0, 0, 0, 0, 0, 0, 0]; // molar conductivities
@@ -75,7 +75,7 @@ class Electrolyte {
             this.conductivities[3] = 0.001413;
             this.conductivities[4] = 0.00667;
             this.conductivities[5] = 0.0129;
-            this.conductivities[6] = 0.1119;
+            //this.conductivities[6] = 0.1119; // we will leave this here for the moment
         }
     }
 }
@@ -214,7 +214,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     const selectedElectrolyte = electrolytes[selectedSolution];
 
     // Only use this to check if the values from the table and the graph are good
-    // selectedElectrolyte.initializeConductivities();
+    //selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
