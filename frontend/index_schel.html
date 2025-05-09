@@ -102,6 +102,54 @@
         body.dark-mode .lightToggleIcon_pyhR {
             display: none;
         }
+        .custom-button {
+    position: relative;
+   padding: 14px 28px;
+    margin: 10px;
+    background-color: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+/* Conținut tooltip */
+.hover-content {
+    display: none;
+    position: absolute;
+    top: 100%; /* sub buton */
+    left: 0;
+    width: 300px;
+    margin-top: 10px;
+    color:#000;
+    padding: 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Apare la hover pe buton */
+.custom-button:hover .hover-content {
+    display: block;
+    opacity: 1;
+}
+
+/* Container pentru buton + hover box */
+.hover-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* spațiu între butoane */
+    margin-top: 30px;
+}
     </style>
 </head>
 
@@ -129,12 +177,12 @@
                     </button>
                     <div class="collapse navbar-collapse" id="responsive-navbar-nav">
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
-                            <a href="index_skel.html" class="nav-link">Acasă</a>
+                            <a href="index_schel.html" class="nav-link">Acasă</a>
                             <a href="natura_elec.html" class="nav-link">Natura electrolitului</a>
                             <a href="conductivitate_spec.html" class="nav-link">Conductivitatea specifică</a>
                             <a href="conductivitate_mol.html" class="nav-link">Conductivitatea molară</a>
             
-                            <a href="/testeaza" class="nav-link">Testează</a>
+                            <a href="index.html" class="nav-link">Testează</a>
                         </div>
                     </div>
                 </nav>
@@ -164,46 +212,28 @@
     </div>
 
     <!-- butoane!!! -->
-    <div style="margin-top: 20px;">
-        <button onclick="toggleText('exempleText')" class="custom-button secondary">Electroliți slabi</button>
-        <button onclick="toggleText('testText')" class="custom-button">Electroliți tari</button>
-    </div>
+  
 
 <!-- Texte ascunse inițial -->
-<div id="exempleText" style="display: none; margin-top: 15px;" class="highlight-box1">
-    <p><strong>Electroliţii slabi</strong> au K<sub>d</sub> &lt; 10<sup>−2</sup>, chiar şi în soluţii de concentraţii mai mici de 0,01 M, iar α &lt; 0,5.</p>
-   
-</div>
+<div class="button-container">
+    <div class="hover-wrapper">
+        <button class="custom-button secondary">
+            Electroliți slabi
+            <div class="hover-content">
+                <p><strong>Electroliţii slabi</strong> au K<sub>d</sub> &lt; 10<sup>−2</sup>, chiar şi în soluţii de concentraţii mai mici de 0,01 M, iar α &lt; 0,5.</p>
+            </div>
+        </button>
+    </div>
 
-    <div id="testText" style="display: none; margin-top: 15px;">
-        <div class="highlight-box2">
-        <p>
-            <strong>Electroliţii tari </strong>au K<sub>d</sub> &gt; 1 şi α = 1, ceea ce înseamnă că ei sunt complet disociaţi în soluţii
-            de concentraţii cuprinse între 0,1 M şi 0,001 M. 
-        </p>
-        <p><strong>Procesul de disociere în cazul electroliţilor tari este:</strong></p>
-        <ul>
-            <li>
-                <strong>Disocierea unui acid tare:</strong><br>
-                H<sub>2</sub>SO<sub>4</sub> → 2H<sup>+</sup> + SO<sub>4</sub><sup>2−</sup> <br>
-                K<sub>d</sub> = (C<sub>H<sup>+</sup></sub>)² · C<sub>SO₄²⁻</sub> / C<sub>H₂SO₄</sub>
-            </li>
-            <li>
-                <strong>Disocierea unei baze tari:</strong><br>
-                Cu(OH)<sub>2</sub> → Cu<sup>2+</sup> + 2OH<sup>−</sup> <br>
-                K<sub>d</sub> = C<sub>Cu<sup>2+</sup></sub> · (C<sub>OH<sup>−</sup></sub>)² / C<sub>Cu(OH)₂</sub>
-            </li>
-            <li>
-                <strong>Disocierea unei sări:</strong><br>
-                NiSO<sub>4</sub> → Ni<sup>2+</sup> + SO<sub>4</sub><sup>2−</sup> <br>
-                K<sub>d</sub> = C<sub>Ni<sup>2+</sup></sub> · C<sub>SO₄²⁻</sub> / C<sub>NiSO₄</sub>
-            </li>
-        </ul>
-        <p>Unde <strong>C</strong> este concentraţia electroliţilor.</p>
-        </div>
+    <div class="hover-wrapper">
+        <button class="custom-button">
+            Electroliți tari
+            <div class="hover-content">
+                <p><strong>Electroliţii tari</strong> au K<sub>d</sub> &gt; 1 şi α = 1, ceea ce înseamnă că ei sunt complet disociaţi în soluţii de concentraţii între 0,1 M şi 0,001 M.</p>
+            </div>
+        </button>
     </div>
 </div>
-
 <script>
     function toggleText(id) {
       // ascunde ambele
