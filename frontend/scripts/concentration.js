@@ -37,6 +37,7 @@ class Electrolyte {
 
         this.A = 0; // First component of the exponential/linear regression
         this.B = 0; // Second component of the exponential/linear regression
+        this.R2 = 0; // Value of R^2
 
     }
 
@@ -108,29 +109,10 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
     updateInputFields(selectedElectrolyte);
 
     // Recreate the table and the graph if they existed before
+    const generateContainer = document.getElementById('concentrationGenerateContainer');
+    generateContainer.innerHTML = ''; // Clear previous table and graph
     if (selectedElectrolyte.generated) {
-        const tableContainer = document.getElementById('concentrationTableContainer');
-        tableContainer.innerHTML = ''; // Clear previous table and graph
         createResultTableAndGraph(selectedElectrolyte); // Create the table and graph again
-        // Update graphical conductivity (gcid) display if the electrolyte is strong
-        if (selectedElectrolyte.strength === 'strong') {
-            const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
-            if (selectedElectrolyte.gcid) {
-                gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${selectedElectrolyte.gcid.toFixed(2)}`;
-                gcidLabel.style.display = 'inline';
-            }
-        }
-        else{ // hide the gcid, because there is no gcid for weak electrolytes
-            const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
-        gcidLabel.style.display = 'none'; // Hide it
-        }
-    }
-    else { // If the table and graph hadn't been generated before, then remove the previous table and graph
-        const tableContainer = document.getElementById('concentrationTableContainer');
-        tableContainer.innerHTML = ''; // Clear previous table and graph
-
-        const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
-        gcidLabel.style.display = 'none'; // Hide it
     }
 });
 
@@ -166,7 +148,7 @@ function updateInputFields(electrolyte) {
         const inputField = document.createElement('input');
         inputField.type = 'number';
         inputField.step = 'any'; // Allow float values
-        inputField.placeholder = 'Introduceți conductivitatea măsurată (μS/cm)';
+        inputField.placeholder = 'Conductivitatea măsurată (μS/cm)';
         inputField.id = `input-${i}`;
         inputField.className = 'dynamic-input'; // Add a class for styling
 
@@ -180,8 +162,8 @@ function updateInputFields(electrolyte) {
             if (electrolyte.generated) // Clear previous table and graph if they exist when typing
             {
                 electrolyte.generated = false; // Reset the table creation flag
-                let tableContainer = document.getElementById('concentrationTableContainer');
-                tableContainer.innerHTML = '';
+                let generateContainer = document.getElementById('concentrationGenerateContainer');
+                generateContainer.innerHTML = '';
             }
             const value = event.target.value.trim();
             if (value === '') {
@@ -213,8 +195,13 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
 
     const selectedElectrolyte = electrolytes[selectedSolution];
 
+    if(selectedElectrolyte.generated){
+        alert("Deja ai generat tabelul cu valori si graficul.");
+        return;
+    }
+
     // Only use this to check if the values from the table and the graph are good
-    //selectedElectrolyte.initializeConductivities();
+    // selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -271,15 +258,9 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
                     selectedElectrolyte.gcid = responseData.B;
                 selectedElectrolyte.A = responseData.A;
                 selectedElectrolyte.B = responseData.B;
+                selectedElectrolyte.R2 = responseData.R2;
 
                 createResultTableAndGraph(selectedElectrolyte); // Now create the table and the graph
-                // Update the gcid label if the electrolyte is strong
-                if (selectedElectrolyte.strength === 'strong' && selectedElectrolyte.gcid) {
-                    const gcidLabel = document.getElementById('graphicalConductivityAtInfiniteDilution');
-                    gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${selectedElectrolyte.gcid.toFixed(2)}`;
-                    gcidLabel.style.display = 'inline'; // Make it visible
-                }
-                selectedElectrolyte.generated = true; // Set the flag to true
 
             })
             .catch((error) => {
@@ -292,9 +273,8 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
 
 // CREATE THE TABLE AND THE GRAPH
 function createResultTableAndGraph(electrolyte) {
-    electrolyte.tableCreated = true;
-    const tableContainer = document.getElementById('concentrationTableContainer');
-    tableContainer.innerHTML = ''; // Clear previous table if exists
+
+    const generateContainer = document.getElementById('concentrationGenerateContainer');
 
     const table = document.createElement('table');
     table.className = 'result-table'; // For styling
@@ -312,7 +292,6 @@ function createResultTableAndGraph(electrolyte) {
         headers.push('Coeficient de disociere (α)');
         headers.push('Constanta de disociere Kd (mol/L)');
     }
-
 
     if (electrolyte.name !== 'KCl') {
         if (electrolyte.type === 'acid') {
@@ -366,11 +345,37 @@ function createResultTableAndGraph(electrolyte) {
         }
     }
     // Append the table to the container
-    tableContainer.appendChild(table);
+    generateContainer.appendChild(table);
 
     //==============================================
 
+    // Display R^²
+    const rLabel = document.createElement('div');
+    rLabel.id = 'regressionLabel';
+    rLabel.textContent = `R² = ${electrolyte.R2.toFixed(6)}`;
+    rLabel.style.marginTop = '10px';
+    rLabel.style.textAlign = 'center';
+    rLabel.style.fontWeight = 'bold';
+    generateContainer.appendChild(rLabel);
+
+    // If the electrolyte is strong, then we can determine the graphical value of the conductivity at infinite dilution
+    if(electrolyte.strength === 'strong'){
+        const gcidLabel = document.createElement('div');
+        gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${electrolyte.gcid.toFixed(2)}`;
+        gcidLabel.style.marginTop = '10px';
+        gcidLabel.style.textAlign = 'center';
+        gcidLabel.style.fontWeight='bold';
+        generateContainer.appendChild(gcidLabel);
+    }
     // Now, let's generate the graph:
+    graphContainer = document.createElement('div');
+    graphContainer.id = 'concentrationGraphContainer';
+    generateContainer.appendChild(graphContainer);
+
+    const canvas = document.createElement('canvas');
+    canvas.id = 'myGraph';
+    graphContainer.appendChild(canvas);
+
     if (electrolyte.strength == 'weak') {
         const bottomLimit = Math.sqrt(0.0005);
         const upperLimit = Math.sqrt(1);
@@ -378,19 +383,6 @@ function createResultTableAndGraph(electrolyte) {
 
         // Ensure regression is populated before chart
         const regression = generateDataMonomial(bottomLimit, upperLimit, stepSize);
-
-        let graphContainer = document.getElementById('concentrationGraphContainer');
-        if (graphContainer) {
-            graphContainer.remove();
-        }
-
-        graphContainer = document.createElement('div');
-        graphContainer.id = 'concentrationGraphContainer';
-        tableContainer.appendChild(graphContainer);
-
-        const canvas = document.createElement('canvas');
-        canvas.id = 'myGraph';
-        graphContainer.appendChild(canvas);
 
         // Draw the chart
         const ctx = document.getElementById('myGraph').getContext('2d');
@@ -423,7 +415,7 @@ function createResultTableAndGraph(electrolyte) {
                         title: {
                             display: true,
                             text: 'Concentrație √(mol/L)',
-                            font:{
+                            font: {
                                 size: 20
                             }
                         }
@@ -432,7 +424,7 @@ function createResultTableAndGraph(electrolyte) {
                         title: {
                             display: true,
                             text: 'Conductivitate molară (S·cm²/mol)',
-                            font:{
+                            font: {
                                 size: 20
                             }
                         }
@@ -446,7 +438,7 @@ function createResultTableAndGraph(electrolyte) {
             const regressionPoints = [];
             for (let x = bottomLimit; x <= upperLimit; x += stepSize) {
                 regressionPoints.push({
-                    x: x,    
+                    x: x,
                     y: electrolyte.A * Math.pow(x, electrolyte.B)
                 });
             }
@@ -462,19 +454,6 @@ function createResultTableAndGraph(electrolyte) {
         // Ensure regression is populated before chart
         const regression = generateDataLinear(bottomLimit, upperLimit, stepSize);
 
-        let graphContainer = document.getElementById('concentrationGraphContainer');
-        if (graphContainer) {
-            graphContainer.remove();
-        }
-
-        graphContainer = document.createElement('div');
-        graphContainer.id = 'concentrationGraphContainer';
-        tableContainer.appendChild(graphContainer);
-
-        const canvas = document.createElement('canvas');
-        canvas.id = 'myGraph';
-        graphContainer.appendChild(canvas);
-
         // Draw the chart
         const ctx = document.getElementById('myGraph').getContext('2d');
         new Chart(ctx, {
@@ -506,7 +485,7 @@ function createResultTableAndGraph(electrolyte) {
                         title: {
                             display: true,
                             text: 'Concentrație √(mol/L)',
-                            font:{
+                            font: {
                                 size: 20
                             }
                         }
@@ -515,7 +494,7 @@ function createResultTableAndGraph(electrolyte) {
                         title: {
                             display: true,
                             text: 'Conductivitate molară (S·cm²/mol)',
-                            font:{
+                            font: {
                                 colour: "red",
                                 size: 20
                             }
@@ -538,7 +517,7 @@ function createResultTableAndGraph(electrolyte) {
         }
     }
 
-
-
+    // Set the flag to true
+    electrolyte.generated = true;
 }
 
