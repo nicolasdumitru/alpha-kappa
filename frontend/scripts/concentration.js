@@ -113,6 +113,13 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
 
     imageContainer.appendChild(img);
 
+    const img2 = document.createElement('img');
+    img2.src = `../images/concentration.png`; // second image
+    img2.alt = `Imagine suplimentară ${selectedElectrolyte.name}`;
+    img2.className = 'electrolyte-image';
+    
+    imageContainer.appendChild(img2);
+
     const generateGraphButton = document.getElementById('concentrationGenerateButton');
     generateGraphButton.style.display = 'block';
 
@@ -211,7 +218,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     }
 
     // Only use this to check if the values from the table and the graph are good
-    // selectedElectrolyte.initializeConductivities();
+    selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -295,7 +302,7 @@ function createResultTableAndGraph(electrolyte) {
         'Concentrație (mol / L)',
         'Conductivitate măsurată λ (μS/cm)',
         'Conductivitate măsurată λ (S/cm)',
-        'Conductivitate molară Λ(S·cm²/mol)',
+        'Conductivitate echivalentă Λ(S·cm²/mol)',
     ];
 
     if (electrolyte.strength === 'weak') {
@@ -368,13 +375,26 @@ function createResultTableAndGraph(electrolyte) {
     rLabel.style.fontWeight = 'bold';
     generateContainer.appendChild(rLabel);
 
-     // Display the theoretical value of conductivity at infinite dilution
-    const tcidLabel = document.createElement('div');
-        tcidLabel.textContent = `Valoarea teoretică a conductivității echivalente limită Λ₀: ${electrolyte.tcid.toFixed(2)} S/cm`;
-        tcidLabel.style.marginTop = '10px';
-        tcidLabel.style.textAlign = 'center';
-        tcidLabel.style.fontWeight = 'bold';
-        generateContainer.appendChild(tcidLabel);
+    const tcidExample = document.createElement('div');
+    tcidExample.style.marginTop = '10px';
+    tcidExample.style.textAlign = 'center';
+    tcidExample.style.fontWeight = 'bold';
+    generateContainer.appendChild(tcidExample);
+
+    if (electrolyte.name === 'CH₃COOH') {
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(CH₃COOH) = ν₊λ₊° + ν₋λ₋° = 1(349.6) + 1(40.9)= ${electrolyte.tcid.toFixed(2)} S/cm`;
+    }
+    if (electrolyte.name === 'HCl') {
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică: `
+    }
+
+    // Display the theoretical value of conductivity at infinite dilution
+    // const tcidLabel = document.createElement('div');
+    //     tcidLabel.textContent = `Valoarea teoretică a conductivității echivalente limită Λ₀: ${electrolyte.tcid.toFixed(2)} S/cm`;
+    //     tcidLabel.style.marginTop = '10px';
+    //     tcidLabel.style.textAlign = 'center';
+    //     tcidLabel.style.fontWeight = 'bold';
+    //     generateContainer.appendChild(tcidLabel);
 
     // If the electrolyte is strong, then we can determine the graphical value of the conductivity at infinite dilution
     if (electrolyte.strength === 'strong') {
@@ -438,7 +458,7 @@ function createResultTableAndGraph(electrolyte) {
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitate molară (S·cm²/mol)',
+                            text: 'Conductivitate echivalentă (S·cm²/mol)',
                             font: {
                                 size: 20
                             }
@@ -508,7 +528,7 @@ function createResultTableAndGraph(electrolyte) {
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitate molară (S·cm²/mol)',
+                            text: 'Conductivitate echivalentă (S·cm²/mol)',
                             font: {
                                 colour: "red",
                                 size: 20
