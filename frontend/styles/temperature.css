@@ -60,3 +60,13 @@ canvas {
 #temperatureTablesContainer th {
     background-color: #e0f0ff;
 }
+
+#temperatureImageContainer{
+    display: flex;
+    gap: 10px; /* spacing between images */
+    flex-wrap: wrap; /* wrap on small screens */
+}
+.temperatureImage{
+    max-width: 400px;
+    height: auto;
+}

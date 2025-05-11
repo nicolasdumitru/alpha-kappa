@@ -209,7 +209,7 @@ class TemperatureStudy {
 
             // Header row
             const headerRow = document.createElement('tr');
-            ['Concentrație (mol/L)', 'Conductivitate (μS/cm)', 'Conductivitate (S/cm)', 'Conductivitate molară (S·cm²/mol)', 'pOH', 'pH'].forEach(header => {
+            ['Concentrație (mol/L)', 'Conductivitate (μS/cm)', 'Conductivitate (S/cm)', 'Conductivitate echivalentă (S·cm²/mol)', 'pOH', 'pH'].forEach(header => {
                 const th = document.createElement('th');
                 th.textContent = header;
                 headerRow.appendChild(th);

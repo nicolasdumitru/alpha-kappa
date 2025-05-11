@@ -164,6 +164,17 @@
     width: 80%; 
 }
 
+#electrolyteImageContainer {
+    display: flex;
+    gap: 10px; /* spacing between images */
+    flex-wrap: wrap; /* wrap on small screens */
+}
+
+.electrolyte-image {
+    max-width: 400px;
+    height: auto;
+}
+
 canvas {
     max-width: 100%;
     margin: 20px auto;
