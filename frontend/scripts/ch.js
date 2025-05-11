@@ -1,13 +1,14 @@
-document.querySelector('.toggleButton_gllP').addEventListener('click', function () {
-    const body = document.body;
-    if (body.classList.contains('dark-mode')) {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-    } else {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-    }
-});
+// this was for the night mode button in index.html
+// document.querySelector('.toggleButton_gllP').addEventListener('click', function () {
+//     const body = document.body;
+//     if (body.classList.contains('dark-mode')) {
+//         body.classList.remove('dark-mode');
+//         body.classList.add('light-mode');
+//     } else {
+//         body.classList.remove('light-mode');
+//         body.classList.add('dark-mode');
+//     }
+// });
 
 // 
 document.querySelector('.navbar-toggle').addEventListener('click', function () {
@@ -21,12 +22,13 @@ document.querySelector('.navbar-toggle').addEventListener('click', function () {
     }
 });
 
-document.getElementById('theme-toggle').addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('dark-mode');
-    document.getElementById('theme-toggle').setAttribute('aria-pressed', isDark.toString());
+// this was also for the night mode button, perhaps also in index.html, not sure
+// document.getElementById('theme-toggle').addEventListener('click', () => {
+//     const isDark = document.body.classList.toggle('dark-mode');
+//     document.getElementById('theme-toggle').setAttribute('aria-pressed', isDark.toString());
 
-    // Toggle dark mode for all relevant components
-    document.querySelectorAll('.text-section, .card').forEach(el => {
-        el.classList.toggle('dark-mode', isDark);
-    });
-});
+//     // Toggle dark mode for all relevant components
+//     document.querySelectorAll('.text-section, .card').forEach(el => {
+//         el.classList.toggle('dark-mode', isDark);
+//     });
+// });

@@ -218,7 +218,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
     }
 
     // Only use this to check if the values from the table and the graph are good
-    selectedElectrolyte.initializeConductivities();
+    // selectedElectrolyte.initializeConductivities();
 
     let ok = true;
     for (let i = 0; i < selectedElectrolyte.concentrations.length; i++) {
@@ -385,7 +385,13 @@ function createResultTableAndGraph(electrolyte) {
         tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(CH₃COOH) = ν₊λ₊° + ν₋λ₋° = 1(349.6) + 1(40.9)= ${electrolyte.tcid.toFixed(2)} S/cm`;
     }
     if (electrolyte.name === 'HCl') {
-        tcidExample.textContent = `Conductivitate echivalentă limită teoretică: `
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(HCl) = ν₊λ₊° + ν₋λ₋° = 1(349.6) + 1(76.4)= ${electrolyte.tcid.toFixed(2)} S/cm`;
+    }
+    else if(electrolyte.name === 'KCl'){
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(KCl) = ν₊λ₊° + ν₋λ₋° = 1(73.5) + 1(76.4)= ${electrolyte.tcid.toFixed(2)} S/cm`;
+    }
+    else if(electrolyte.name === 'NaOH'){
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(KCl) = ν₊λ₊° + ν₋λ₋° = 1(50.1) + 1(197.8)= ${electrolyte.tcid.toFixed(2)} S/cm`;
     }
 
     // Display the theoretical value of conductivity at infinite dilution

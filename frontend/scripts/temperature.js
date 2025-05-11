@@ -298,12 +298,18 @@ class TemperatureStudy {
                         title: {
                             display: true,
                             text: 'Concentrație (mol / L)',
+                            font: {
+                                size: 20
+                            }
                         },
                     },
                     y: {
                         title: {
                             display: true,
                             text: 'Conductivitate (S/cm)',
+                            font: {
+                                size: 20
+                            }
                         },
                     },
                 },
@@ -370,12 +376,18 @@ class TemperatureStudy {
                         title: {
                             display: true,
                             text: 'Concentrație (mol / L)',
+                            font: {
+                                size: 20
+                            }
                         },
                     },
                     y: {
                         title: {
                             display: true,
                             text: 'Conductivitate echivalentă (S·cm²/mol)',
+                            font: {
+                                size: 20
+                            }
                         },
                     },
                 },

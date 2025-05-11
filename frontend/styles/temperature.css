@@ -35,13 +35,24 @@ button#temperatureTablesButton:hover {
     background-color: #005fa3;
 }
 
-canvas {
+#temperatureGraphContainer{
     display: block;
     max-width: 100%;
     margin: 20px auto;
     border: 1px solid #ddd;
     border-radius: 10px;
     background: #f9f9f9;
+    height: 500px;
+}
+
+#molarConductivityGraphContainer{
+    display: block;
+    max-width: 100%;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    height: 500px;
 }
 
 #temperatureTablesContainer table {
