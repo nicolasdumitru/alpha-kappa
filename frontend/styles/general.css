@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     padding: 40px;
-    background: url('chimie_background.jpg') no-repeat center center fixed;
+    background: url('../images/chimie_background.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #000;
     transition: background-color 0.3s, color 0.3s;
@@ -65,8 +65,7 @@ body {
 .toggleButton_gllP {
     align-items: center;
     border-radius: 50%;
-    display: flex
-;
+    display: flex;
     height: 100%;
     justify-content: center;
     width: 100%;

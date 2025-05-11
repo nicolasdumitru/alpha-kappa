@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conductivity Study</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="grafica.css">
-    <script src="ch.js" defer></script>
+    <link rel="stylesheet" href="../styles/concentration.css">
+    <link rel="stylesheet" href="../styles/temperature.css">
+    <link rel="stylesheet" href="../styles/general.css">
+    
     <!-- moved the chart.js -->
 </head>
 <body>
@@ -16,7 +17,7 @@
                 <div class="design-navbar row">
                     <div class="text-center col-sm-2">
                         <a href="/">
-                            <img class="logo" src="icon_logo.png" alt="Logo" style="width: 80px; height: auto;">
+                            <img class="logo" src="../images/icon_logo.png" alt="Logo" style="width: 80px; height: auto;">
                         </a>
                     </div>
                     <div class="col-sm-10">
@@ -66,7 +67,7 @@
     <!-- Concentration Study Container -->
     <div id="concentrationContainer" hidden>
         <h2>Studiul Influenței Concentrației</h2>
-       <!-- <div class="select-title">Selectați soluția</div>  nu imi dau seama daca e nevoie neaparat--> 
+       <!-- <div class="select-title">Selectați soluția</div>  nu imi dau seama daca e nevoie neaparat  -->
         <select id="electrolyteSelector">
             <option value="" disabled selected>Alegeți o soluție</option>
             <option value="HCl">HCl</option>
@@ -82,6 +83,8 @@
         <div>
             <button id="concentrationGenerateButton" hidden>Generați graficul</button>
         </div>
+
+        <div id="electrolyteImageContainer"></div>
         
         <div id="concentrationGenerateContainer">
             <!-- this is the container for the results table and the graph container-->
@@ -97,11 +100,10 @@
             <!-- Input fields for temperatures will be dynamically added here -->
         </div>
 
-        <div>
-            <button id="temperatureGenerateButton">Generați graficul</button>
-        </div>
-
-        <button id="createTablesButton">Creați tabele</button>
+       
+        <button id="temperatureGraphsButton">Generați graficul</button>
+        
+        <button id="temperatureTablesButton">Creați tabele</button>
 
         <div id="temperatureTablesContainer"></div>
 
@@ -110,9 +112,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="scripts/temperature.js"></script>
-    <script src="scripts/switch.js"></script>
-    <script src="scripts/concentration.js"></script>
+    <script src="../scripts/temperature.js"></script>
+    <script src="../scripts/switch.js"></script>
+    <script src="../scripts/concentration.js"></script>
+    <script src="../scripts/ch.js" defer></script>
     
 </body>
 </html>

@@ -1,0 +1,62 @@
+#temperatureContainer h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #0077cc;
+}
+
+#temperatureInputContainer {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#temperatureInputContainer input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 80%;
+}
+
+button#temperatureGraphsButton,
+button#temperatureTablesButton {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#temperatureGraphsButton:hover,
+button#temperatureTablesButton:hover {
+    background-color: #005fa3;
+}
+
+canvas {
+    display: block;
+    max-width: 100%;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+}
+
+#temperatureTablesContainer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#temperatureTablesContainer th, 
+#temperatureTablesContainer td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+#temperatureTablesContainer th {
+    background-color: #e0f0ff;
+}

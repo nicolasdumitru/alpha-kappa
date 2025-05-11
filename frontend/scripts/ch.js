@@ -30,8 +30,3 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
         el.classList.toggle('dark-mode', isDark);
     });
 });
-
-document.getElementById("conductivityDropdownToggle").addEventListener("click", function () {
-    const menu = document.getElementById("conductivityDropdownMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-});

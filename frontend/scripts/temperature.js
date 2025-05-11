@@ -98,7 +98,10 @@ class TemperatureStudy {
         headerRow.appendChild(document.createElement('th')); // Empty cell for row label
         this.temperatures.forEach(temp => {
             const th = document.createElement('th');
-            th.textContent = `Temp ${temp} °C`;
+            th.style.textAlign = 'center';  // Center the header text
+            th.style.fontWeight = 'bold';   // Make the header bold
+            th.className='ceva';
+            th.textContent = `Temperatură: ${temp} °C`;
             headerRow.appendChild(th);
         });
         table.appendChild(headerRow);
@@ -372,7 +375,7 @@ class TemperatureStudy {
                     y: {
                         title: {
                             display: true,
-                            text: 'Conductivitate molară (S·cm²/mol)',
+                            text: 'Conductivitate echivalentă (S·cm²/mol)',
                         },
                     },
                 },
@@ -382,7 +385,7 @@ class TemperatureStudy {
                             label: function (context) {
                                 const concentration = validConcentrations[context.dataIndex];
                                 const mcValue = context.raw;
-                                return `Concentrație: ${concentration} mol/L\nConductivitate molară: ${mcValue} S·cm²/mol`;
+                                return `Concentrație: ${concentration} mol/L\nConductivitate echivalentă: ${mcValue} S·cm²/mol`;
                             }
                         }
                     }
@@ -400,8 +403,8 @@ temperatureStudy.createTemperatureInputs();
 // temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
 
 // Event listener for generating graph after data input
-document.getElementById('createTablesButton').addEventListener('click', () => {
-    if(temperatureStudy.tablesGenerated){
+document.getElementById('temperatureTablesButton').addEventListener('click', () => {
+    if (temperatureStudy.tablesGenerated) {
         alert("Deja ati generat tabele.");
         return;
     }
@@ -417,8 +420,8 @@ document.getElementById('createTablesButton').addEventListener('click', () => {
     temperatureStudy.tablesGenerated = true;
 });
 
-document.getElementById('temperatureGenerateButton').addEventListener('click', () => {
-    if(temperatureStudy.graphsGenerated){
+document.getElementById('temperatureGraphsButton').addEventListener('click', () => {
+    if (temperatureStudy.graphsGenerated) {
         alert("Deja ati generat grafice.");
         return;
     }

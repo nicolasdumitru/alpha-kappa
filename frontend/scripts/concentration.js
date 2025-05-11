@@ -103,6 +103,16 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
 
     console.log('Selected electrolyte:', selectedElectrolyte);
 
+    const imageContainer = document.getElementById('electrolyteImageContainer');
+    imageContainer.innerHTML = ''; // Clear previous image
+
+    const img = document.createElement('img');
+    img.src = `images/${selectedElectrolyte.name}.png`; // Adjust the path/filename logic as needed
+    img.alt = `Imagine ${selectedElectrolyte.name}`;
+    img.className = 'electrolyte-image'; // Optional: for styling
+
+    imageContainer.appendChild(img);
+
     const generateGraphButton = document.getElementById('concentrationGenerateButton');
     generateGraphButton.hidden = false;
 
@@ -195,7 +205,7 @@ document.getElementById('concentrationGenerateButton').addEventListener('click',
 
     const selectedElectrolyte = electrolytes[selectedSolution];
 
-    if(selectedElectrolyte.generated){
+    if (selectedElectrolyte.generated) {
         alert("Deja ai generat tabelul cu valori si graficul.");
         return;
     }
@@ -359,22 +369,18 @@ function createResultTableAndGraph(electrolyte) {
     generateContainer.appendChild(rLabel);
 
     // If the electrolyte is strong, then we can determine the graphical value of the conductivity at infinite dilution
-    if(electrolyte.strength === 'strong'){
+    if (electrolyte.strength === 'strong') {
         const gcidLabel = document.createElement('div');
         gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${electrolyte.gcid.toFixed(2)}`;
         gcidLabel.style.marginTop = '10px';
         gcidLabel.style.textAlign = 'center';
-        gcidLabel.style.fontWeight='bold';
+        gcidLabel.style.fontWeight = 'bold';
         generateContainer.appendChild(gcidLabel);
     }
     // Now, let's generate the graph:
-    graphContainer = document.createElement('div');
-    graphContainer.id = 'concentrationGraphContainer';
-    generateContainer.appendChild(graphContainer);
-
     const canvas = document.createElement('canvas');
-    canvas.id = 'myGraph';
-    graphContainer.appendChild(canvas);
+    canvas.id = 'myGraph';  // Add an ID for styling and accessing the canvas
+    generateContainer.appendChild(canvas);
 
     if (electrolyte.strength == 'weak') {
         const bottomLimit = Math.sqrt(0.0005);
