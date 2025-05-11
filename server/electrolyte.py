@@ -122,5 +122,5 @@ class Electrolyte:
             "pOH": self.poh.tolist(),
             "A": self.a,
             "B": self.b,
-            "R^2": self.r_squared,
+            "R2": self.r_squared,
         }

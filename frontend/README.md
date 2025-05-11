@@ -33,6 +33,7 @@ dataReceived = {
             pOH (array with pOH)
             A (first value from the regression equation for the graph)
             B (second value from the regression equation for the graph)
+            R² (float value that suggests the quality of the regression)
     }
 ```
 

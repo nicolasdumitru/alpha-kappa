@@ -119,7 +119,7 @@ class TemperatureStudy {
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.step = 'any';
-                input.placeholder = `Introduceți conduc. Temp ${temp}`;
+                input.placeholder = `Conductivitate (μS/cm)`;
                 input.id = `concentration-${i}-temp-${j}`;
 
                 // Set event listener to capture the input values
@@ -192,7 +192,6 @@ class TemperatureStudy {
     // Generate temperature tables
     generateTemperatureTables(validTemperatures) {
         const container = document.getElementById('temperatureTablesContainer');
-        container.innerHTML = ''; // Clear previous tables
 
         validTemperatures.forEach(tempIdx => {
             const temp = this.temperatures[tempIdx];
@@ -398,10 +397,14 @@ class TemperatureStudy {
 const temperatureStudy = new TemperatureStudy("KOH");
 temperatureStudy.createTemperatureInputs();
 
-//temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
+// temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
 
 // Event listener for generating graph after data input
 document.getElementById('createTablesButton').addEventListener('click', () => {
+    if(temperatureStudy.tablesGenerated){
+        alert("Deja ati generat tabele.");
+        return;
+    }
     temperatureStudy.calculateMc(); // ensure molar conductivity is calculated
     const validTemperatures = temperatureStudy.checkAtLeastOneFilledField();
 
@@ -415,6 +418,10 @@ document.getElementById('createTablesButton').addEventListener('click', () => {
 });
 
 document.getElementById('temperatureGenerateButton').addEventListener('click', () => {
+    if(temperatureStudy.graphsGenerated){
+        alert("Deja ati generat grafice.");
+        return;
+    }
     temperatureStudy.calculateMc();
     const validTemperatures = temperatureStudy.checkFilledFields();
 
