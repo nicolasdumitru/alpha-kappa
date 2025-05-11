@@ -126,7 +126,7 @@
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
                             <a href="index_schel.html" class="nav-link">Acasă</a>
                             <a href="natura_elec.html" class="nav-link">Natura electrolitului</a>
-                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea specifică</a>
+                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalenta</a>
                             <a href="conductivitate_mol.html" class="nav-link">Conductivitatea molară</a>
                             <a href="index.html" class="nav-link">Testează</a>
                         </div>
@@ -146,67 +146,16 @@
 
     <!-- Secțiune text + imagine -->
     <div class="card-flex">
-     <div class="card-text">
-    <p><strong>Procesul de disociere în cazul electroliţilor slabi este:</strong></p>
-    <table style="border-collapse: collapse; margin: 10px 0;">
-        <tr style="text-align: center;">
-            <td style="padding: 4px 20px;">CH<sub>3</sub>COOH</td>
-            <td style="padding: 4px 20px;">⇌</td>
-            <td style="padding: 4px 20px;">H<sup>+</sup></td>
-            <td style="padding: 4px 20px;">+</td>
-            <td style="padding: 4px 20px;">CH<sub>3</sub>COO<sup>−</sup></td>
-        </tr>
-        <tr style="text-align: center; font-family: monospace;">
-            <td>c</td>
-            <td></td>
-            <td>0</td>
-            <td></td>
-            <td>0</td>
-        </tr>
-        <tr style="text-align: center; font-family: monospace;">
-            <td>c(1−α)</td>
-            <td></td>
-            <td>cα</td>
-            <td></td>
-            <td>cα</td>
-        </tr>
-    </table>
-    <em>(concentrații la echilibru)</em>
-
-    <p style="margin-top: 10px;">
-        <em>Constanta de disociere:</em><br>
-        K<sub>d</sub> = (C<sub>H<sup>+</sup></sub> · C<sub>CH₃COO<sup>−</sup></sub>) / C<sub>CH₃COOH</sub> = (α²·c) / (1−α)
-    </p>
-</div>
-    </div>
-    <div style="height: 40px;"></div>
-
-<div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap;">
-    <!-- Imagine stânga -->
-    <div class="card-image">
-        <img src="part1.jpg" alt="Partea 1 - disociere electrolit tare">
-    </div>
-
-    <!-- Textul într-un card propriu și separat -->
-    <div class="card" style="margin: 0;">
-        <p><strong>Procesul de disociere în cazul electroliţilor tari este:</strong></p>
-
-        <p><u>Disocierea unui acid tare:</u></p>
-        <p>HCl → H<sup>+</sup> + Cl<sup>−</sup><br>
-        K<sub>d</sub> = [H<sup>+</sup>][Cl<sup>−</sup>] / [HCl]</p>
-
-        <p><u>Disocierea unei baze tari:</u></p>
-        <p>NaOH → Na<sup>+</sup> + HO<sup>−</sup><br>
-        K<sub>d</sub> = (C<sub>Na<sup>+</sup></sub> · C<sub>HO<sup>−</sup></sub>) / C<sub>NaOH</sub></p>
-
-        <p><u>Disocierea unei sări:</u></p>
-        <p>KCl → K<sup>+</sup> + Cl<sup>−</sup><br>
-        K<sub>d</sub> = (C<sub>K<sup>+</sup></sub> · C<sub>Cl<sup>−</sup></sub>) / C<sub>KCl</sub></p>
-    </div>
-
-    <!-- Imagine dreapta -->
-    <div class="card-image">
-        <img src="part2.jpg" alt="Partea 2 - disociere electrolit tare">
+    <div class="card-text">
+        <p><strong>Conductivitatea echivalentă</strong> (&#923;) crește odată cu diluția.</p>
+        <p>La diluții mari, &#923; rămâne constantă și se numește <strong>conductivitate echivalentă limită</strong> (&#923;<sub>&#8734;</sub> sau &#923;<sub>0</sub>).</p>
+        <p>Pentru determinarea lui &#923;<sub>&#8734;</sub>, se determină &#923; la diferite concentrații ale unei soluții de electrolit și se extrapolează la C = 0.</p>
+        <p>Gradul de disociere (&#945;) se exprimă prin raportul dintre &#923; și &#923;<sub>&#8734;</sub>:</p>
+        <p><strong>&#945; = &#923; / &#923;<sub>&#8734;</sub></strong> &nbsp; (18)</p>
+        <p><strong>Legea diluției lui Ostwald</strong> exprimă dependența constantei de disociere K<sub>d</sub> de &#945;:</p>
+        <p><strong>K<sub>d</sub> = &#945;<sup>2</sup>C / (1 - &#945;)</strong> &nbsp; (19)</p>
+        <p>Înlocuind &#945; din relația (18) în relația (19), se obține:</p>
+        <p><strong>K<sub>d</sub> = &#923;<sup>2</sup>C / [&#923;<sub>&#8734;</sub>(&#923;<sub>&#8734;</sub> − &#923;)]</strong></p>
     </div>
 </div>
 
