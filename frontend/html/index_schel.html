@@ -90,18 +90,6 @@
             top: 20px;
             right: 20px;
         }
-
-        .darkToggleIcon_wfgR {
-            display: none;
-        }
-
-        body.dark-mode .darkToggleIcon_wfgR {
-            display: inline-block;
-        }
-
-        body.dark-mode .lightToggleIcon_pyhR {
-            display: none;
-        }
         .custom-button {
     position: relative;
    padding: 14px 28px;
@@ -112,44 +100,9 @@
     border-radius: 6px;
     cursor: pointer;
     font-size: 1.1em;
+    
 }
-
-/* Conținut tooltip */
-.hover-content {
-    display: none;
-    position: absolute;
-    top: 100%; /* sub buton */
-    left: 0;
-    width: 300px;
-    margin-top: 10px;
-    color:#000;
-    padding: 15px;
-    background-color: #f2f2f2;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-/* Apare la hover pe buton */
-.custom-button:hover .hover-content {
-    display: block;
-    opacity: 1;
-}
-
 /* Container pentru buton + hover box */
-.hover-wrapper {
-    position: relative;
-    display: inline-block;
-}
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* spațiu între butoane */
-    margin-top: 30px;
-}
 
 .nav-link {
     font-size: 18px; /* Mărește dimensiunea fontului */
@@ -184,10 +137,9 @@
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
                             <a href="index_schel.html" class="nav-link">Acasă</a>
                             <a href="natura_elec.html" class="nav-link">Clasificarea electroliţilor</a>
-                            <a href="clasif_comp.html" class="nav-link">Clasificarea compușilor</a>
-                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalentă</a>
+                            <a href="clasif_comp.html" class="nav-link">Natura electrolitilor</a>
                             <a href="conductivitate_mol.html" class="nav-link">Conductivitatea echivalentă limită</a>
-                            <a href="ph.html" class="nav-link">PH</a>
+                            <a href="ph.html" class="nav-link">pH</a>
             
                             <a href="index.html" class="nav-link">Testează</a>
                         </div>
@@ -250,30 +202,35 @@
             se realizează între ioni şi molecule nedisociate ale electrolitului. Constanta de echilibru a
             electrolitului, în disocierea electrolitică se numeşte constantă de disociere şi se notează Kd.</p>
     </div>
+     </div>
 
     <!-- butoane!!! -->
   
 
 <!-- Texte ascunse inițial -->
-<div class="button-container">
-    <div class="hover-wrapper">
-        <button class="custom-button secondary">
-            Electroliți slabi
-            <div class="hover-content">
-                <p><strong>Electroliţii slabi</strong> au K<sub>d</sub> &lt; 10<sup>−2</sup>, chiar şi în soluţii de concentraţii mai mici de 0,01 M, iar α &lt; 0,5.</p>
-            </div>
-        </button>
+
+<div style="display: flex; gap: 40px; justify-content: center; align-items: flex-start; margin-top: 40px;">
+    
+    <div style="text-align: center; width: 250px;">
+        <img src="../images/etanol.png" alt="Etanol" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; font-weight: bold; color: #e60000; text-transform: uppercase;">Etanol</p>
+        <p style="font-size: 14px; font-weight: bold; color: #fff; background-color: rgba(230, 0, 0, 0.7); padding: 10px 15px; border-radius: 8px;">Fără conductivitate</p>
     </div>
 
-    <div class="hover-wrapper">
-        <button class="custom-button">
-            Electroliți tari
-            <div class="hover-content">
-                <p><strong>Electroliţii tari</strong> au K<sub>d</sub> &gt; 1 şi α = 1, ceea ce înseamnă că ei sunt complet disociaţi în soluţii de concentraţii între 0,1 M şi 0,001 M.</p>
-            </div>
-        </button>
+    <div style="text-align: center; width: 250px;">
+        <img src="../images/kcl_hc.png" alt="Clorură de potasiu" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; font-weight: bold; color: #1e6cc7; text-transform: uppercase;">Clorură de potasiu</p>
+        <p style="font-size: 14px; font-weight: bold; color: #fff; background-color: rgba(30, 108, 199, 0.7); padding: 10px 15px; border-radius: 8px;">Conductivitate ridicată</p>
     </div>
+
+    <div style="text-align: center; width: 250px;">
+        <img src="../images/acetic_acid.png" alt="Acid acetic" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; font-weight: bold; color: #cc0000; text-transform: uppercase;">Acid acetic</p>
+        <p style="font-size: 14px; font-weight: bold; color: #fff; background-color: rgba(204, 0, 0, 0.7); padding: 10px 15px; border-radius: 8px;">Conductivitate scăzută</p>
+    </div>
+
 </div>
+
 <script>
     function toggleText(id) {
       // ascunde ambele
@@ -286,7 +243,7 @@
       // nu merge asta momentan (?????)
       const selected = document.getElementById(id);
       selected.style.display = 'block';
-      void selected.offsetWidth; // Forțează reflow pentru a relua animația
+      void selected.offsetWidth; // forteaza reflow pentru a relua animația
       selected.classList.add('fade-in');
     }
   </script>

@@ -194,6 +194,27 @@ body.dark-mode .textbox h3 {
 body.dark-mode .ph-image {
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
+
+.chemistry-info {
+    background-color: #f2f4f8;
+    border: 3px solid #2c7be5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chemistry-info h3 {
+    color: #2c7be5;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.chemistry-info ul {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #333;
+}
     </style>
 </head>
 
@@ -223,9 +244,9 @@ body.dark-mode .ph-image {
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
                             <a href="index_schel.html" class="nav-link">Acasă</a>
                             <a href="natura_elec.html" class="nav-link">Clasificarea electroliţilor</a>
-                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalentă</a>
+                             <a href="clasif_comp.html" class="nav-link">Natura electroliților</a>
                             <a href="conductivitate_mol.html" class="nav-link">Conductivitatea echivalentă limită</a>
-                            <a href="ph.html" class="nav-link">PH</a>
+                            <a href="ph.html" class="nav-link">pH</a>
             
                             <a href="index.html" class="nav-link">Testează</a>
                         </div>
@@ -246,24 +267,33 @@ body.dark-mode .ph-image {
             </div>
         </div>
     </div>
+<div class="chemistry-info">
+    <h3>Bazele:</h3>
+    <ul>
+        <li>Pot fi compuși moleculari sau ionici;</li>
+        <li>Există baze solubile și nesolubile;</li>
+        <li>Bazele solubile ionizează sau disociază în ioni în apă;</li>
+        <li>Proprietățile bazelor provin de la prezența ionilor de hidroxid;</li>
+        <li>Exemple: baze tari (NaOH, KOH), baze slabe (NH<sub>4</sub>OH, Fe(OH)<sub>3</sub>), etc.</li>
+    </ul>
 
-<div class="card-text" style="background-color: #f0f8ff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 1.1rem; line-height: 1.5; color: #333;">
-  <div class="textbox">
-    <h3>Definirea pH-ului</h3>
-    <p>
-        O altă mărime ce caracterizează soluţiile de electrolit este <strong>pH</strong>, reprezentând logaritmul cu semn schimbat al concentraţiei ionilor de <strong>H<sup>+</sup></strong> și poate lua valori între <strong>0</strong> și <strong>14</strong>:
-    </p>
-    <p style="text-align: center; font-weight: bold;">
-        pH = −log[H<sup>+</sup>] &nbsp;&nbsp; sau &nbsp;&nbsp; pH = −log c<sub>H⁺</sub>
-    </p>
-    <p>
-        Electroliţii cu pH cuprins între <strong>[0 - 7)</strong> sunt <em>acizi</em>, cei cu pH ≈ <strong>7</strong> sunt <em>neutri</em>, iar cei cu pH cuprins între <strong>(7 - 14]</strong> sunt <em>baze</em>.
-    </p>
-    <p style="text-align: center; font-weight: bold;">
-        pH + pOH = 14 &nbsp;&nbsp; unde &nbsp;&nbsp; pOH = −log[OH<sup>−</sup>]
-    </p>
-    <img src="../images/tabel.png" alt="Scala pH" style="display: block; margin: 30px auto 0; max-width: 100%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-radius: 6px;">
-</div>
+    <h3>Acizii:</h3>
+    <ul>
+        <li>Sunt compuși moleculari care ionizează sau se disociază în ioni în apă;</li>
+        <li>Proprietățile lor provin de la prezența ionilor de hidrogen;</li>
+        <li>Toți acizii sunt solubili în apă;</li>
+        <li>Unii acizi sunt electroliți puternici, pe când alții sunt slabi;</li>
+        <li>Exemple: acizi tari (HCl, H<sub>2</sub>SO<sub>4</sub>, HNO<sub>3</sub>), acizi slabi (H<sub>2</sub>S, CH<sub>3</sub>COOH), etc.</li>
+    </ul>
+
+    <h3>Sărurile:</h3>
+    <ul>
+        <li>Sunt combinații cu structură ionică, în general, formate prin neutralizarea unui acid cu o bază;</li>
+        <li>Unele săruri sunt solubile în apă, pe când altele nu;</li>
+        <li>Toate sărurile solubile sunt și electroliți puternici;</li>
+        <li>Exemple: NaCl, ZnSO<sub>4</sub>, CuSO<sub>4</sub>, CaCO<sub>3</sub>, ZnCl<sub>2</sub>, FeCl<sub>3</sub>, AgNO<sub>3</sub>, etc.</li>
+    </ul>
+
 
 <script>
     function toggleText(id) {

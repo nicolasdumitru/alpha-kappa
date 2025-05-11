@@ -96,6 +96,51 @@
                 margin-top: 20px;
             }
         }
+        .hidden-content {
+    display: none;
+    background-color: #f2f4f8;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 10px;
+    font-size: 1.5rem; 
+    line-height: 1.8; 
+    padding: 20px; 
+    max-width: 80%; 
+}
+.image-container {
+    display: flex; /* Face ca imaginile să fie pe aceeași linie */
+    gap: 20px; /* Adaugă un spațiu între ele */
+    justify-content: center; /* Le aliniează frumos pe orizontală */
+    margin-top: 20px;
+}
+
+.image-container img {
+    max-width: 45%; /* Ajustează dimensiunea imaginilor */
+    height: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    display: flex;
+    gap: 30px; /* Mărește spațiul dintre imagini */
+    justify-content: center;
+    width: 90%; /* Extinde containerul */
+    margin: auto;
+
+.image-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+}
+
+.image-caption {
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+    margin-top: 8px;
+}
+}
     </style>
 </head>
 <body>
@@ -125,10 +170,9 @@
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
                             <a href="index_schel.html" class="nav-link">Acasă</a>
                             <a href="natura_elec.html" class="nav-link">Clasificarea electroliţilor</a>
-                            <a href="clasif_comp.html" class="nav-link">Clasificarea compușilor</a>
-                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalentă</a>
+                            <a href="clasif_comp.html" class="nav-link">Natura electroliților</a>
                             <a href="conductivitate_mol.html" class="nav-link">Conductivitatea echivalentă limită</a>
-                            <a href="ph.html" class="nav-link">PH</a>
+                            <a href="ph.html" class="nav-link">pH</a>
                             <a href="index.html" class="nav-link">Testează</a>
                         </div>
                     </div>
@@ -145,18 +189,57 @@
         </div>
     </div>
 
-<div class="card-flex">
-  <div class="card-text" style="background-color: #f9f9f9; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 1.2rem; line-height: 1.6;">
-    <p><strong>Conductivitatea echivalentă</strong>, la diluții mari, &#923; rămâne constantă și se numește <strong>conductivitate echivalentă limită</strong> (&#923;<sub>&#8734;</sub> sau &#923;<sub>0</sub>).</p>
-    <p>Pentru determinarea lui &#923;<sub>&#8734;</sub>, se determină &#923; la diferite <strong>concentrații</strong> ale unei soluții de <strong>electrolit</strong> și se extrapolează la <strong>C = 0</strong>.</p>
-    <p><strong>Gradul de disociere</strong> (&#945;) se exprimă prin raportul dintre &#923; și &#923;<sub>&#8734;</sub>:</p>
-    <p style="font-size: 1.3rem;"><strong>&#945; = &#923; / &#923;<sub>&#8734;</sub></strong> &nbsp; (1)</p>
-    <p><strong>Legea diluției lui Ostwald</strong> exprimă dependența <strong>constantei de disociere</strong> K<sub>d</sub> de &#945;:</p>
-    <p style="font-size: 1.3rem;"><strong>K<sub>d</sub> = &#945;<sup>2</sup>C / (1 - &#945;)</strong> &nbsp; (2)</p>
-    <p>Înlocuind &#945; din relația (1) în relația (2), se obține:</p>
-    <p style="font-size: 1.3rem;"><strong>K<sub>d</sub> = &#923;<sup>2</sup>C / [&#923;<sub>&#8734;</sub>(&#923;<sub>&#8734;</sub> − &#923;)]</strong></p>
-  </div>
+<div class="button-container">
+    <button class="custom-button" onclick="toggleVisibility('infoEchivalenta')">
+        Conductivitate echivalentă
+    </button>
+    <button class="custom-button" onclick="toggleVisibility('infoEchivalentaLimita')">
+        Conductivitate echivalentă limită teoretică 
+    </button>
 </div>
+
+<!-- Conținut ascuns inițial -->
+<div id="infoEchivalenta" class="hidden-content">
+<p style="font-size: 1.3rem; line-height: 1.6;">
+      Pentru a putea compara din punct de vedere al <strong>conductivităţii electrice</strong> soluţii de <strong>electroliţi</strong>
+      diferiţi, se defineşte <strong>conductivitatea echivalentă</strong> (&#x3BB;), care reprezintă <strong>conductivitatea</strong> &#x3BB; raportată la
+      un <strong>echivalent gram</strong> de electrolit dizolvat într-un volum <strong>V (cm<sup>3</sup>)</strong> de soluţie.
+    </p>
+ <p><strong>Conductivitatea echivalentă</strong>, la diluții mari, &#923; rămâne constantă și se numește <strong>conductivitate echivalentă limită</strong> (&#923;<sub>&#8734;</sub> sau &#923;<sub>0</sub>).</p>
+
+    <p>Pentru determinarea lui &#923;<sub>&#8734;</sub>, se determină &#923; la diferite <strong>concentrații</strong> ale unei soluții de <strong>electrolit</strong> și se extrapolează la <strong>C = 0</strong>.</p>
+
+    <p><strong>Gradul de disociere</strong> (&#945;) se exprimă prin raportul dintre &#923; și &#923;<sub>&#8734;</sub>:</p>
+
+    <p style="font-size: 1.3rem;"><strong>&#945; = &#923; / &#923;<sub>&#8734;</sub></strong> &nbsp; (1)</p>
+
+    <p><strong>Legea diluției lui Ostwald</strong> exprimă dependența <strong>constantei de disociere</strong> K<sub>d</sub> de &#945;:</p>
+
+    <p style="font-size: 1.3rem;"><strong>K<sub>d</sub> = &#945;<sup>2</sup>C / (1 - &#945;)</strong> &nbsp; (2)</p>
+
+    <p>Înlocuind &#945; din relația (1) în relația (2), se obține:</p>
+
+    <p style="font-size: 1.3rem;"><strong>K<sub>d</sub> = &#923;<sup>2</sup>C / [&#923;<sub>&#8734;</sub>(&#923;<sub>&#8734;</sub> − &#923;)]</strong></p>
+</div>
+
+<div id="infoEchivalentaLimita" class="hidden-content">
+
+ <div class="image-container">
+    <div class="image-wrapper">
+        <img src="../images/formula.png" alt="Tabel 2">
+        <p style="font-size: 1.2rem; text-align: center; margin-top: 10px;" class="image-caption">
+            <p><strong>ν<sub>+</sub>, ν<sub>-</sub></strong> - coeficienții stoichiometrici ai cationului/anionului;</p>
+
+<p><strong>&lambda;<sub>+</sub><sup>°</sup>, &lambda;<sub>-</sub><sup>°</sup></strong> - conductivitatea ionică a cationului/anionului</p>
+        </p>
+        </div>
+        <div style="text-align: center;">
+    <h4 style="font-size: 1rem;"><p>Conductivitatea ionică la 25<sup>°</sup>C</p></h4>
+    <img src="../images/image.png" alt="tabel" style="display: block; margin: 30px auto 0; max-width: 40%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-radius: 6px;">
+        </div>
+ </div>
+</div>
+
 
     <script>
         function toggleTheme() {
@@ -165,6 +248,14 @@
                 el.classList.toggle("dark-theme");
             });
         }
+        function toggleVisibility(id) {
+    var element = document.getElementById(id);
+    if (element.style.display === "none" || element.style.display === "") {
+        element.style.display = "block";
+    } else {
+        element.style.display = "none";
+    }
+}
     </script>
     
     <script src="../scripts/ch.js" defer></script>
