@@ -1,12 +1,156 @@
+#studySelector {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px auto;
+    flex-wrap: wrap;
+}
+
+#studySelector button {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#studySelector button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(135deg, #5a60e2, #9ba0ff);
+}
+
+#studySelector button:active {
+    transform: scale(0.98);
+}
+
+#concentrationContainer h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 30px;
+    padding: 10px 0;
+    border-bottom: 2px solid #4e54c8;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+#electrolyteSelector {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    display: block;
+    background-color: #f8f8f8;
+    transition: border-color 0.3s;
+}
+
+#electrolyteSelector:focus {
+    border-color: #4e54c8;
+    outline: none;
+}
+
+/* Input container styling if there are dynamic inputs */
+#concentrationInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+#concentrationGenerateButton {
+    padding: 12px 24px;
+    font-size: 16px;
+    background: linear-gradient(90deg, #4e54c8, #8f94fb);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin: 10px auto;
+    display: none;
+}
+
+#concentrationGenerateButton:hover {
+    background: linear-gradient(90deg, #5e63db, #a1a6fd);
+    transform: translateY(-2px);
+}
+
+/* Canvas styling for graph */
+#concentrationGraphContainer {
+    display: block;
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* DONT KNOW WHAT THIS DOES
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: #0077cc;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 16px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 200px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    border-radius: 8px;
+    padding: 10px 0;
+    top: 100%;
+    left: 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f2f2f2;
+}
+*/
+
 /* Style for each row container */
 .input-row {
     display: flex;
+    width: 500px;
     align-items: center;
-    margin-bottom: 10px;  /* Adds space between rows */
+    margin-bottom: 5px;  /* Adds space between rows */
 }
 
 /* Style for labels */
 .concentration-label {
+    width: 300px;
     margin-right: 10px;  /* Adds space between the label and input */
     font-weight: bold;  /* Makes label text bold */
     font-size: 14px;     /* Optional: Adjust font size for label */
@@ -14,9 +158,10 @@
 
 /* Style for the input fields */
 .dynamic-input {
-    padding: 8px;
-    width: 200px;        /* Adjust based on your preferred input width */
-    font-size: 14px;     /* Optional: Adjust font size for input */
+    padding: 10px;
+    border: 1px solid #0a0a0a;
+    border-radius: 6px;
+    width: 80%; 
 }
 
 canvas {
