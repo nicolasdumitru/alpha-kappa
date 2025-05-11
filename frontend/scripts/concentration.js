@@ -107,14 +107,14 @@ document.getElementById('electrolyteSelector').addEventListener('change', (event
     imageContainer.innerHTML = ''; // Clear previous image
 
     const img = document.createElement('img');
-    img.src = `images/${selectedElectrolyte.name}.png`; // Adjust the path/filename logic as needed
+    img.src = `../images/${selectedElectrolyte.name}.png`; // Adjust the path/filename logic as needed
     img.alt = `Imagine ${selectedElectrolyte.name}`;
     img.className = 'electrolyte-image'; // Optional: for styling
 
     imageContainer.appendChild(img);
 
     const generateGraphButton = document.getElementById('concentrationGenerateButton');
-    generateGraphButton.hidden = false;
+    generateGraphButton.style.display = 'block';
 
     updateInputFields(selectedElectrolyte);
 
