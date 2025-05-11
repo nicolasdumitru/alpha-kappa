@@ -143,12 +143,14 @@
 /* Style for each row container */
 .input-row {
     display: flex;
+    width: 500px;
     align-items: center;
-    margin-bottom: 10px;  /* Adds space between rows */
+    margin-bottom: 5px;  /* Adds space between rows */
 }
 
 /* Style for labels */
 .concentration-label {
+    width: 300px;
     margin-right: 10px;  /* Adds space between the label and input */
     font-weight: bold;  /* Makes label text bold */
     font-size: 14px;     /* Optional: Adjust font size for label */
@@ -156,9 +158,10 @@
 
 /* Style for the input fields */
 .dynamic-input {
-    padding: 8px;
-    width: 200px;        /* Adjust based on your preferred input width */
-    font-size: 14px;     /* Optional: Adjust font size for input */
+    padding: 10px;
+    border: 1px solid #0a0a0a;
+    border-radius: 6px;
+    width: 80%; 
 }
 
 canvas {
