@@ -368,15 +368,24 @@ function createResultTableAndGraph(electrolyte) {
     rLabel.style.fontWeight = 'bold';
     generateContainer.appendChild(rLabel);
 
+     // Display the theoretical value of conductivity at infinite dilution
+    const tcidLabel = document.createElement('div');
+        tcidLabel.textContent = `Valoarea teoretică a conductivității echivalente limită Λ₀: ${electrolyte.tcid.toFixed(2)} S/cm`;
+        tcidLabel.style.marginTop = '10px';
+        tcidLabel.style.textAlign = 'center';
+        tcidLabel.style.fontWeight = 'bold';
+        generateContainer.appendChild(tcidLabel);
+
     // If the electrolyte is strong, then we can determine the graphical value of the conductivity at infinite dilution
     if (electrolyte.strength === 'strong') {
         const gcidLabel = document.createElement('div');
-        gcidLabel.textContent = `Valoarea grafică a conductivității infinite la diluție Λ₀: ${electrolyte.gcid.toFixed(2)}`;
+        gcidLabel.textContent = `Valoarea grafică a conductivității echivalente limită Λ₀: ${electrolyte.gcid.toFixed(2)} S/cm`;
         gcidLabel.style.marginTop = '10px';
         gcidLabel.style.textAlign = 'center';
         gcidLabel.style.fontWeight = 'bold';
         generateContainer.appendChild(gcidLabel);
     }
+
     // Now, let's generate the graph:
     const canvas = document.createElement('canvas');
     canvas.id = 'myGraph';  // Add an ID for styling and accessing the canvas
