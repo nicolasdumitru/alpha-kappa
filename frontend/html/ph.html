@@ -151,9 +151,48 @@
     margin-top: 30px;
 }
 
-.nav-link {
-    font-size: 18px; /* Mărește dimensiunea fontului */
-    padding: 12px 20px; /* Adaugă spațiu în interiorul butoanelor */
+.textbox {
+    background-color: #e9f3ff;
+    border: 3px solid #2c7be5;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-top: 40px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    font-size: 1.15em;
+    line-height: 1.7;
+    transition: all 0.3s ease;
+}
+
+.textbox h3 {
+    color: #2c7be5;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.ph-image {
+    display: block;
+    margin: 25px auto 0;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* dark mode */
+body.dark-mode .textbox {
+    background-color: #1e2a3a;
+    border-color: #3a7bbf;
+    color: #e0e0e0;
+}
+
+body.dark-mode .textbox h3 {
+    color: #4fa3ff;
+}
+
+body.dark-mode .ph-image {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
     </style>
 </head>
@@ -208,72 +247,25 @@
             </div>
         </div>
     </div>
-<div style="display: flex; gap: 1.5rem; align-items: flex-start; background-color: #f0f8ff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 1.1rem; line-height: 1.5; color: #333;">
-  
-  <!-- Coloana stanga: Stiati ca -->
-  <div style="flex: 0 0 30%; background-color: #e6f3ff; padding: 1rem; border-radius: 8px;">
-    <h3 style="text-align: center;">Știați că:</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-      <thead>
-        <tr style="background-color: #dbeeff;">
-          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">Tip apă</th>
-          <th style="text-align: left; padding: 8px; border: 1px solid #ccc;">μS/cm</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ccc;">Apă ultrapură</td>
-          <td style="padding: 8px; border: 1px solid #ccc;">&lt; 0.055</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ccc;">Apă bidistilată</td>
-          <td style="padding: 8px; border: 1px solid #ccc;">&lt; 1</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ccc;">Apă potabilă</td>
-          <td style="padding: 8px; border: 1px solid #ccc;">&lt; 2500<br><span style="font-size: 0.85rem; color: #666;">(UE 2020/2184)</span></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ccc;">Apă de mare</td>
-          <td style="padding: 8px; border: 1px solid #ccc;">~ 50.000</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 
-  <div style="flex: 1;"></div>
-    <div class="text-section" id="conductivityDescription">
-        <h3>Electroliții</h3>
-        <p>Sunt substanţe care prin dizolvare într-un solvent polar se desfac în particule cu
-            sarcini electrice pozitive sau negative, numite ioni. Trecerea electroliţilor sub formă de ioni se
-            numeşte disociere electrolitică. Procesul de disociere electrolitică este un proces de echilibru, care
-            se realizează între ioni şi molecule nedisociate ale electrolitului. Constanta de echilibru a
-            electrolitului, în disocierea electrolitică se numeşte constantă de disociere şi se notează Kd.</p>
-    </div>
-
-    <!-- butoane!!! -->
-  
-
-<!-- Texte ascunse inițial -->
-<div class="button-container">
-    <div class="hover-wrapper">
-        <button class="custom-button secondary">
-            Electroliți slabi
-            <div class="hover-content">
-                <p><strong>Electroliţii slabi</strong> au K<sub>d</sub> &lt; 10<sup>−2</sup>, chiar şi în soluţii de concentraţii mai mici de 0,01 M, iar α &lt; 0,5.</p>
-            </div>
-        </button>
-    </div>
-
-    <div class="hover-wrapper">
-        <button class="custom-button">
-            Electroliți tari
-            <div class="hover-content">
-                <p><strong>Electroliţii tari</strong> au K<sub>d</sub> &gt; 1 şi α = 1, ceea ce înseamnă că ei sunt complet disociaţi în soluţii de concentraţii între 0,1 M şi 0,001 M.</p>
-            </div>
-        </button>
-    </div>
+<div class="card-text" style="background-color: #f0f8ff; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 1.1rem; line-height: 1.5; color: #333;">
+  <div class="textbox">
+    <h3>Definirea pH-ului</h3>
+    <p>
+        O altă mărime ce caracterizează soluţiile de electrolit este <strong>pH</strong>, reprezentând logaritmul cu semn schimbat al concentraţiei ionilor de <strong>H<sup>+</sup></strong> și poate lua valori între <strong>0</strong> și <strong>14</strong>:
+    </p>
+    <p style="text-align: center; font-weight: bold;">
+        pH = −log[H<sup>+</sup>] &nbsp;&nbsp; sau &nbsp;&nbsp; pH = −log c<sub>H⁺</sub>
+    </p>
+    <p>
+        Electroliţii cu pH cuprins între <strong>[0 - 7)</strong> sunt <em>acizi</em>, cei cu pH ≈ <strong>7</strong> sunt <em>neutri</em>, iar cei cu pH cuprins între <strong>(7 - 14]</strong> sunt <em>baze</em>.
+    </p>
+    <p style="text-align: center; font-weight: bold;">
+        pH + pOH = 14 &nbsp;&nbsp; unde &nbsp;&nbsp; pOH = −log[OH<sup>−</sup>]
+    </p>
+    <img src="../images/tabel.png" alt="Scala pH" style="display: block; margin: 30px auto 0; max-width: 100%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-radius: 6px;">
 </div>
+
 <script>
     function toggleText(id) {
       // ascunde ambele

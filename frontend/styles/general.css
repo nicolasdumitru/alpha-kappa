@@ -72,7 +72,6 @@ body {
 }
 
 button {
-    appearance: auto;
     text-rendering: auto;
     letter-spacing: normal;
     word-spacing: normal;
@@ -80,7 +79,6 @@ button {
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
-    display: inline-block;
     text-align: center;
     cursor: default;
     box-sizing: border-box;
@@ -140,7 +138,7 @@ body {
 
 /* Asigurare responsive */
 .navbar-toggle {
-    background-color: #4CAF50; /* Fundal verde */
+    background-color: #3840db; /* Fundal verde */
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -369,7 +367,6 @@ body.dark-mode .dropdown-menu .dropdown-item:hover {
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
     margin: 10px auto;
-    display: block;
 }
 
 #concentrationGenerateButton:hover {
@@ -379,7 +376,7 @@ body.dark-mode .dropdown-menu .dropdown-item:hover {
 
 /* Canvas styling for graph */
 #concentrationGraphContainer {
-    display: block;
+
     max-width: 800px;
     margin: 40px auto;
     background: #ffffff;

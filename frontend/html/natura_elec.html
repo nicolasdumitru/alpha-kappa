@@ -125,9 +125,11 @@
                     <div class="collapse navbar-collapse" id="responsive-navbar-nav">
                         <div class="navbar-nav d-flex align-items-center gap-3 flex-wrap">
                             <a href="index_schel.html" class="nav-link">Acasă</a>
-                            <a href="natura_elec.html" class="nav-link">Natura electrolitului</a>
-                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalenta</a>
-                            <a href="conductivitate_mol.html" class="nav-link">Conductivitatea molară</a>
+                            <a href="natura_elec.html" class="nav-link">Clasificarea electroliţilor</a>
+                            <a href="clasif_comp.html" class="nav-link">Clasificarea compușilor</a>
+                            <a href="conductivitate_spec.html" class="nav-link">Conductivitatea echivalentă</a>
+                            <a href="conductivitate_mol.html" class="nav-link">Conductivitatea echivalentă limită</a>
+                            <a href="ph.html" class="nav-link">PH</a>
                             <a href="index.html" class="nav-link">Testează</a>
                         </div>
                     </div>
@@ -145,47 +147,41 @@
     </div>
 
 <!-- Container general -->
-<div style="display: flex; width: 100%; padding: 20px; box-sizing: border-box;">
+<div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; flex-wrap: wrap; padding: 20px; box-sizing: border-box;">
 
   <!-- Box "IMPORTANT" – aliniat la stânga -->
-  <div style="flex: 0 0 300px; background-color: #fff3f3; border-left: 5px solid red; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(255,0,0,0.1);">
-    <p><strong style="color: red;">IMPORTANT:</strong><br>
-    Gradul de disociere al unui electrolit este notat cu α şi reprezintă raportul dintre numărul de molecule disociate şi numărul total de molecule.<br><br>
-    Constanta de disociere şi gradul de disociere constituie criteriul de clasificare a electroliţilor.
-    </p>
-  </div>
-
-  <!-- Spațiu gol pentru separare -->
-  <div style="flex: 1;"></div>
-<div style="display: flex; justify-content: center;">
-  <!-- Box "Procesul de disociere" – centrat pe pagină -->
-  <div style="background: white; padding: 32px; border-radius: 14px; box-shadow: 0 0 18px rgba(0,0,0,0.08); text-align: center; font-size: 17px; width: 600px; margin: auto;">
-    <p><strong style="font-size: 18px;">Procesul de disociere în cazul electroliţilor slabi este:</strong></p>
-    
-    <table style="border-collapse: collapse; margin: 20px auto;">
-      <tr style="text-align: center;">
-        <td style="padding: 6px 12px;">CH<sub>3</sub>COOH</td>
-        <td style="padding: 6px 12px;">⇌</td>
-        <td style="padding: 6px 12px;">H<sup>+</sup></td>
-        <td style="padding: 6px 12px;">+</td>
-        <td style="padding: 6px 12px;">CH<sub>3</sub>COO<sup>−</sup></td>
-      </tr>
-      <tr style="text-align: center; font-family: monospace;">
-        <td>c</td><td></td><td>0</td><td></td><td>0</td>
-      </tr>
-      <tr style="text-align: center; font-family: monospace;">
-        <td>c(1−α)</td><td></td><td>cα</td><td></td><td>cα</td>
-      </tr>
-    </table>
-
-    <em>(concentrații la echilibru)</em>
-
-    <p style="margin-top: 14px;">
-      <em>Constanta de disociere:</em><br>
-      K<sub>d</sub> = (C<sub>H<sup>+</sup></sub> · C<sub>CH₃COO<sup>−</sup></sub>) / C<sub>CH₃COOH</sub> = (α²·c) / (1−α)
-    </p>
-  </div>
+  <div style="flex: 0 0 380px; background-color: #ffeaea; border-left: 8px solid #e60000; padding: 24px; border-radius: 10px; box-shadow: 0 4px 20px rgba(230,0,0,0.2); font-size: 18px; font-weight: 500; color: #400000;">
+  <p><strong style="color: #cc0000; font-size: 20px;">⚠️ IMPORTANT:</strong><br><br>
+  <b>Gradul de disociere al unui electrolit</b> este notat cu <strong>α</strong> şi reprezintă raportul dintre numărul de molecule disociate şi numărul total de molecule.<br><br>
+  <strong>Constanta de disociere</strong> şi <strong>gradul de disociere</strong> constituie criteriul de clasificare a electroliţilor.
+  </p>
 </div>
+
+<div style="background: #eaf4ff; padding: 32px; border-radius: 14px; border-left: 6px solid #2c7be5; box-shadow: 0 4px 18px rgba(44, 123, 229, 0.2); text-align: center; font-size: 17px; width: 600px; margin-left: 40px; margin-right: auto; color: #0a2e57;">
+  <p><strong style="font-size: 19px; color: #000000;">Procesul de disociere în cazul electroliţilor slabi este:</strong></p>
+  
+  <table style="border-collapse: collapse; margin: 20px auto;">
+    <tr style="text-align: center;">
+      <td style="padding: 6px 12px;">CH<sub>3</sub>COOH</td>
+      <td style="padding: 6px 12px;">⇌</td>
+      <td style="padding: 6px 12px;">H<sup>+</sup></td>
+      <td style="padding: 6px 12px;">+</td>
+      <td style="padding: 6px 12px;">CH<sub>3</sub>COO<sup>−</sup></td>
+    </tr>
+    <tr style="text-align: center; font-family: monospace;">
+      <td>c</td><td></td><td>0</td><td></td><td>0</td>
+    </tr>
+    <tr style="text-align: center; font-family: monospace;">
+      <td>c(1−α)</td><td></td><td>cα</td><td></td><td>cα</td>
+    </tr>
+  </table>
+
+  <em>(concentrații la echilibru)</em>
+
+  <p style="margin-top: 14px;">
+    <em>Constanta de disociere:</em><br>
+    K<sub>d</sub> = (C<sub>H<sup>+</sup></sub> · C<sub>CH₃COO<sup>−</sup></sub>) / C<sub>CH₃COOH</sub> = (α²·c) / (1−α)
+  </p>
 </div>
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap;">
@@ -195,12 +191,12 @@
     </div>
 
     <!-- Textul într-un card propriu și separat -->
-    <div class="card" style="margin: 0;">
+    <div class="card" style="margin: 0; background-color: #f0f8ff; border-left: 8px solid #1e6cc7; box-shadow: 0 6px 20px rgba(30, 108, 199, 0.2); border-radius: 12px;">
         <p><strong>Procesul de disociere în cazul electroliţilor tari este:</strong></p>
 
         <p><u>Disocierea unui acid tare:</u></p>
         <p>HCl → H<sup>+</sup> + Cl<sup>−</sup><br>
-        K<sub>d</sub> = [H<sup>+</sup>][Cl<sup>−</sup>] / [HCl]</p>
+        K<sub>d</sub> = (C<sub>H<sup>+</sup></sub> · C<sub>Cl<sup>-</sup></sub>) / C<sub>HCl</sub></p>
 
         <p><u>Disocierea unei baze tari:</u></p>
         <p>NaOH → Na<sup>+</sup> + HO<sup>−</sup><br>
@@ -215,6 +211,30 @@
     <div class="card-image">
         <img src="../images/part2.jpg" alt="Partea 2 - disociere electrolit tare">
     </div>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <img src="../images/etanol.png" alt="Imagine cu etanol" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+    <p style="margin-top: 10px; font-size: 20px; font-weight: bold; color: #e60000; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">Etanol</p>
+    <p style="font-size: 18px; font-weight: bold; color: #fff; background-color: rgba(230, 0, 0, 0.7); padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); margin-top: 10px;">Fără conductivitate</p>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <img src="../images/kcl_hc.png" alt="Imagine cu KCl" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+    <p style="margin-top: 10px; font-size: 20px; font-weight: bold; color: #1e6cc7; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">Clorură de potasiu</p>
+    <p style="font-size: 18px; font-weight: bold; color: #fff; background-color: rgba(30, 108, 199, 0.7); padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); margin-top: 10px;">Conductivitate ridicată</p>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <img src="../images/acetic_acid.png" alt="Imagine cu acid acetic" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+    <p style="margin-top: 10px; font-size: 20px; font-weight: bold; color: #cc0000; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">Acid acetic</p>
+    <p style="font-size: 18px; font-weight: bold; color: #fff; background-color: rgba(204, 0, 0, 0.7); padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); margin-top: 10px;">Conductivitate scăzută</p>
+</div>
+
+<div style="margin: 5px auto 0; padding: 20px 32px; background-color: #fffef7; border-left: 6px solid #8198a0; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); max-width: 900px; font-size: 17px; color: #211c1c; text-align: center; line-height: 1.6;">
+  Soluțiile de <strong>neelectroliți</strong>, cum ar fi etanolul, nu conțin ioni dizolvați și nu pot conduce electricitatea.<br>
+  Soluțiile de <strong>electroliți</strong> conțin ioni care permit trecerea curentului electric.<br>
+  <strong>Conductivitatea</strong> unei soluții electrolitice este legată de <strong>tăria electrolitului</strong>.
 </div>
 
     <script>
