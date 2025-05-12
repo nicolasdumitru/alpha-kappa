@@ -209,7 +209,11 @@ class TemperatureStudy {
 
             // Header row
             const headerRow = document.createElement('tr');
-            ['Concentrație (mol/L)', 'Conductivitate (μS/cm)', 'Conductivitate (S/cm)', 'Conductivitate echivalentă (S·cm²/mol)', 'pOH', 'pH'].forEach(header => {
+            ['Concentrație (mol/L)', 'Conductivitate (μS/cm)', 'Conductivitate (S/cm)', 'Conductivitate echivalentă (S·cm²/mol)', 
+               // eliminated pH and pOH from the tables
+                // 'pOH', 'pH'
+            ]
+                .forEach(header => {
                 const th = document.createElement('th');
                 th.textContent = header;
                 headerRow.appendChild(th);
@@ -234,9 +238,13 @@ class TemperatureStudy {
                         <td>${µSvalue.toFixed(2)}</td>
                         <td>${conductivity.toFixed(6)}</td>
                         <td>${mc !== null ? mc.toFixed(2) : '—'}</td>
-                        <td>${pOH}</td>
-                        <td>${pH}</td>
-                    `;
+                    `
+                    // eliminated pH and pOH from the tables
+                    // +
+                    // `   <td>${pOH}</td>
+                    //     <td>${pH}</td>
+                    // `
+                    ;
 
                     table.appendChild(row);
                 }
@@ -412,7 +420,7 @@ class TemperatureStudy {
 const temperatureStudy = new TemperatureStudy("KOH");
 temperatureStudy.createTemperatureInputs();
 
-// temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
+temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
 
 // Event listener for generating graph after data input
 document.getElementById('temperatureTablesButton').addEventListener('click', () => {
