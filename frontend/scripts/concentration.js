@@ -391,7 +391,7 @@ function createResultTableAndGraph(electrolyte) {
         tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(KCl) = ν₊λ₊° + ν₋λ₋° = 1(73.5) + 1(76.4)= ${electrolyte.tcid.toFixed(2)} S/cm`;
     }
     else if(electrolyte.name === 'NaOH'){
-        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(KCl) = ν₊λ₊° + ν₋λ₋° = 1(50.1) + 1(197.8)= ${electrolyte.tcid.toFixed(2)} S/cm`;
+        tcidExample.textContent = `Conductivitate echivalentă limită teoretică Λ₀: \u039B°(NaOH) = ν₊λ₊° + ν₋λ₋° = 1(50.1) + 1(197.8)= ${electrolyte.tcid.toFixed(2)} S/cm`;
     }
 
     // Display the theoretical value of conductivity at infinite dilution

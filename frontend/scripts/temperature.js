@@ -420,7 +420,7 @@ class TemperatureStudy {
 const temperatureStudy = new TemperatureStudy("KOH");
 temperatureStudy.createTemperatureInputs();
 
-temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
+// temperatureStudy.initializeConductivities(); // Initialize conductivities before generating graph
 
 // Event listener for generating graph after data input
 document.getElementById('temperatureTablesButton').addEventListener('click', () => {
