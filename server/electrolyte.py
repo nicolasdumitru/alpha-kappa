@@ -44,83 +44,57 @@ Base = ElectrolyteType.Base
 Salt = ElectrolyteType.Salt
 
 
-class Electrolyte:
-    def __init__(self, data):
-        # Parse data from the dictionary
-        self.mode = data.get("mode")  # WARNING: might be deprecated in the future
+def compute_electrolyte_properties(data) -> dict:
+    type = (
+        Acid
+        if data.get("type") == "acid"
+        else Base if data.get("type") == "base" else Salt
+    )
+    is_strong = True if data.get("strength") == "strong" else False
+    tcid = np.float64(data.get("theoreticalConductivityAtInfiniteDilution"))
+    concentrations = np.array(data.get("concentrations", []), dtype=np.float64)
 
-        self.type = (
-            Acid
-            if data.get("type") == "acid"
-            else Base if data.get("type") == "base" else Salt
-        )
-        self.is_strong = True if data.get("strength") == "strong" else False
-        self.name = data.get("name")
-        self.tcid = np.float64(data.get("theoreticalConductivityAtInfiniteDilution"))
-        self.concentrations = np.array(data.get("concentrations", []), dtype=np.float64)
+    conductivities = np.array(data.get("conductivities", []), dtype=np.float64)
 
-        self.conductivities = np.array(data.get("conductivities", []), dtype=np.float64)
+    # calculate molar conductivities:
+    mc = 1000 * conductivities / concentrations
 
-        # calculate molar conductivities:
-        self.mc = 1000 * self.conductivities / self.concentrations
+    # calculate dissociation coeficients:
+    alpha = np.ones(len(concentrations), dtype=np.float64) if is_strong else mc / tcid
 
-        # calculate dissociation coeficients:
-        self.alpha = (
-            np.ones(len(self.concentrations), dtype=np.float64)
-            if self.is_strong
-            else self.mc / self.tcid
-        )
+    kd = (
+        np.zeros(len(concentrations), dtype=np.float64)
+        if is_strong
+        else (np.square(mc) * concentrations / (tcid * (tcid - mc)))
+    )
 
-        self.kd = (
-            np.zeros(len(self.concentrations), dtype=np.float64)
-            if self.is_strong
-            else (
-                np.square(self.mc)
-                * self.concentrations
-                / (self.tcid * (self.tcid - self.mc))
-            )
-        )
+    # initialize pH & pOH
+    if type == Acid:
+        ph = -1 * np.log10(alpha * concentrations)
+        poh = 14 - ph
+    elif type == Base:
+        poh = -1 * np.log10(concentrations)
+        ph = 14 - poh
+    else:  # Salt
+        ph = np.zeros(len(concentrations), dtype=np.float64)
+        poh = np.zeros(len(concentrations), dtype=np.float64)
 
-        # initialize pH & pOH
-        if self.type == Acid:
-            self.ph = -1 * np.log10(self.alpha * self.concentrations)
-            self.poh = 14 - self.ph
-        elif self.type == Base:
-            self.poh = -1 * np.log10(self.concentrations)
-            self.ph = 14 - self.poh
-        else:  # Salt
-            self.ph = np.zeros(len(self.concentrations), dtype=np.float64)
-            self.poh = np.zeros(len(self.concentrations), dtype=np.float64)
+    # Regression:
+    # strong electrolytes => linear regression
+    # weak electrolytes => monomial regression
+    x = np.sqrt(concentrations)  # x axis data
+    y = mc  # y axis data
+    a, b, r_squared = (
+        linear_regression(x, y) if is_strong else monomial_regression(x, y)
+    )
 
-        # Regression:
-        # strong electrolytes => linear regression
-        # weak electrolytes => monomial regression
-        x = np.sqrt(self.concentrations)  # x axis data
-        y = self.mc  # y axis data
-        self.a, self.b, self.r_squared = (
-            linear_regression(x, y) if self.is_strong else monomial_regression(x, y)
-        )
-
-    def display_attributes(self):
-        print("mode:", self.mode)
-        print("name:", self.name)
-        print("type:", self.type)
-        print("is strong:", self.is_strong)
-        print("Stored conductivities:", self.conductivities)
-        print("Molar conductivities:", self.mc)
-        print("Alpha:", self.alpha)
-        print("Kd:", self.kd)
-        print("pH:", self.ph)
-        print("pOH:", self.poh)
-
-    def to_dict(self):
-        return {
-            "alpha": self.alpha.tolist(),
-            "mc": self.mc.tolist(),
-            "kd": self.kd.tolist(),
-            "pH": self.ph.tolist(),
-            "pOH": self.poh.tolist(),
-            "A": self.a,
-            "B": self.b,
-            "R2": self.r_squared,
-        }
+    return {
+        "alpha": alpha.tolist(),
+        "mc": mc.tolist(),
+        "kd": kd.tolist(),
+        "pH": ph.tolist(),
+        "pOH": poh.tolist(),
+        "A": a,
+        "B": b,
+        "R2": r_squared,
+    }

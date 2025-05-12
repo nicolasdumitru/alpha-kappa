@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from electrolyte import Electrolyte
+from electrolyte import compute_electrolyte_properties
 
 app = Flask(__name__)
 CORS(app)
@@ -15,10 +15,7 @@ def receive_data():
     if data is None:
         return jsonify({"error": "Malformed JSON"}), 400
 
-    e = Electrolyte(data)
-    print(f"R^2: {e.r_squared}")  # TODO: Show R^2 in the web interface
-
-    return jsonify(e.to_dict()), 200
+    return jsonify(compute_electrolyte_properties(data)), 200
 
 
 if __name__ == "__main__":
